@@ -9,25 +9,7 @@
     <title>Highland Capital Tax System</title>
   </head>
   <body id="homepage">
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-          <a class="navbar-brand" href="#">Highland Capital Tax System</a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Tax Forms</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Support</a>
-              </li>
-            </ul>
-          </div>
-        </nav> 
+    <?php include("navbar.php") ?> 
         <br>
         <div id="homePageDiv">
           <div class="container">
