@@ -30,7 +30,9 @@
               <div class="row">
               <div class="col text-center" id="col1" >
                   <button type="button" class="btn-lg btn-dark">Employee W4</button>
+                  <a href="w2.php">
                   <button type="button" class="btn-lg btn-dark">Employee W2</button>
+                  </a>
                   <button type="button" class="btn-lg btn-dark">941 Form</button>
                   <button type="button" class="btn-lg btn-dark">944 Form</button>
                </div>              
