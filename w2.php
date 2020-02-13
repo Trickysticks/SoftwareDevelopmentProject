@@ -14,86 +14,91 @@
     </br></br></br>
     <form>
       <div class="form-row">
-        <div class="form-group col-md-4">
-          <label for="w2EIN">Employer Identifier Number (EIN)</label>
+      <div class="form-group col-md-3">
+          <label for="w2SS">a. Employee social security number</label>
+          <input type="text" class="form-control" id="w2SS" name="w2SS">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="w2EIN">b. Employer Identifier Number (EIN)</label>
           <input type="text" class="form-control" id="w2EIN" name="w2EIN">
         </div>
-        <div class="form-group col-md-4">
-          <label for="w2Wages">Wages,tips, other compensation</label>
+        <div class="form-group col-md-3">
+          <label for="w2Wages">1. Wages,tips, other compensation</label>
           <input type="text" class="form-control" id="w2Wages" name="w2Wages" >
         </div>
-        <div class="form-group col-md-4">
-            <label for="w2FederalIncomeTaxWithheld">Federal Income Tax Withheld</label>
+        <div class="form-group col-md-3">
+            <label for="w2FederalIncomeTaxWithheld">2. Federal Income Tax Withheld</label>
             <input type="text" class="form-control" id="w2FederalIncomeTaxWithheld" name="w2FederalIncomeTaxWithheld" >
           </div>
       </div>
       <hr>
       <div class="form-row">
         <div class="form-group col-md-4">
-          <label for="w2EmployerName">Employer's Name</label>
+          <label for="w2EmployerName">c. Employer's Name</label>
           <input type="text" class="form-control" id="w2EmployerName" name="w2EmployerName" >
 
-          <label for="w2EmployerAddress">Employer Address</label>
+          <label for="w2EmployerAddress">c. Employer Address</label>
           <input type="text" class="form-control" id="w2EmployerAddress" name="w2EmployerAddress" >
         
-          <label for="w2EmployerZipCode">Employer's Zip Code'</label>
+          <label for="w2EmployerZipCode">c. Employer's Zip Code</label>
           <input type="text" class="form-control" id="w2EmployerZipCode" name="w2EmployerZipCode" >  
         </div>
         <div class="form-group col-md-4">
-          <label for="w2SocialSecurityWages">Social security wages</label>
+          <label for="w2SocialSecurityWages">3. Social security wages</label>
           <input type="text" class="form-control" id="w2SocialSecurityWages" name="w2SocialSecurityWages" >
-          <label for="w2MedicareWages">Medicare wages and tips</label>
+          <label for="w2MedicareWages">5. Medicare wages and tips</label>
           <input type="text" class="form-control" id="w2MedicareWages" name="w2MedicareWages">
-          <label for="w2SocialSecurityTips">Social security tips</label>
+          <label for="w2SocialSecurityTips">7. Social security tips</label>
           <input type="text" class="form-control" id="w2SocialSecurityTips" name="w2SocialSecurityTips" >
         </div>
         <div class="form-group col-md-4">
-            <label for="w2SSTaxWithheld">Social security tax withheld</label>
+            <label for="w2SSTaxWithheld">4. Social security tax withheld</label>
             <input type="text" class="form-control" id="w2SSTaxWithheld" name="w2SSTaxWithheld" >
 
-            <label for="w2MedicareTaxWithheld">Medicare tax withheld</label>
+            <label for="w2MedicareTaxWithheld">6. Medicare tax withheld</label>
             <input type="text" class="form-control" id="w2MedicareTaxWithheld" name="w2MedicareTaxWithheld" >
         
-            <label for="w2AllocatedTips">Allocated tips</label>
+            <label for="w2AllocatedTips">8. Allocated tips</label>
             <input type="text" class="form-control" id="w2AllocatedTips" name="w2AllocatedTips" >  
         </div>
       </div>
     </br><hr>
     <div class="form-row">
             <div class="form-group col-md-4">
-                <label for="w2ControlNumber">Control number</label>
+                <label for="w2ControlNumber">d. Control number</label>
                 <input type="text" class="form-control" id="w2ControlNumber" name="w2ControlNumber" >   
             </div>
             <div class="form-group col-md-4">
-                <label for="w2Verificationcode">Verification code</label>
+                <label for="w2Verificationcode">9. Verification code</label>
                 <input type="text" class="form-control" id="w2Verificationcode" name="w2Verificationcode" >   
             </div>
             <div class="form-group col-md-4">
-                <label for="w2DependentCareBenefits">Dependent care benefits</label>
+                <label for="w2DependentCareBenefits">10. Dependent care benefits</label>
                 <input type="text" class="form-control" id="w2DependentCareBenefits" name="w2DependentCareBenefits" >   
             </div>
         </div>
     </br> <hr>
       <div class="form-row">
         <div class="form-group col-md-4">
-          <label for="w2EmployeeFirstName">Employee's first name</label>
+          <label for="w2EmployeeFirstName">e. Employee's first name</label>
           <input type="text" class="form-control" id="w2EmployeeFirstName" name="w2EmployeeFirstName" >
-          <label for="w2EmployeeInitial">Employee's initial</label>
+          <label for="w2EmployeeInitial">e. Employee's initial</label>
           <input type="text" class="form-control" id="w2EmployeeInitial" name="w2EmployeeInitial" >
-          <label for="w2EmployeeLastName">Employee's last name</label>
+          <label for="w2EmployeeLastName">e. Employee's last name</label>
           <input type="text" class="form-control" id="w2EmployeeLastName" name="w2EmployeeLastName" >
-          <label for="w2EmployeeAddress">Employee's address</label>
+          <label for="w2EmployeeAddress">e. Employee's address</label>
           <input type="text" class="form-control" id="w2EmployeeAddress" name="w2EmployeeAddress" >
-          <label for="w2EmployeeZipCode">Employee's zip code</label>
+          <label for="w2EmployeeZipCode">e. Employee's zip code</label>
           <input type="text" class="form-control" id="w2EmployeeZipCode" name="w2EmployeeZipCode" >
       
         </div>
         <div class="form-group col-md-4">
-          <label for="w2NonqualifiedPlans">Nonqualified plans</label>
+          <label for="w2NonqualifiedPlans">11. Nonqualified plans</label>
           <input type="text" class="form-control" id="w2NonqualifiedPlans" name="w2NonqualifiedPlans" >
         </br></br>
           <div class="form-row">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <label for="w2Options">13.</label>&nbsp;
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="w2Options">
                         <label class="btn btn-secondary active">
                           <input type="radio" name="options" id="w2StatutoryEmployee" name="w2StatutoryEmployee" autocomplete="off" checked> Statutory Employee
                         </label>
@@ -106,7 +111,7 @@
                       </div>
                 </div>
             </br></br>
-          <label for="w2Other">Other</label>
+          <label for="w2Other">14. Other</label>
           <input type="text" class="form-control" id="w2Other" name="w2Other" >
       
         </div>
@@ -128,36 +133,36 @@
     </br><hr>
     <div class="form row">
         <div class="form-group col-md">
-            <label for="w2State">State</label>
+            <label for="w2State">15. State</label>
             <input type="text" class="form-control" id="w2State" name="w2State" >
         </div>
         <div class="form-group col-md">
-            <label for="w2EmployeeStateID">Employee's state ID number</label>
+            <label for="w2EmployeeStateID">15. Employee's state ID number</label>
             <input type="text" class="form-control" id="w2EmployeeStateID" name="w2EmployeeStateID" >
 
         </div>
         <div class="form-group col-md">
-            <label for="w2StateWages">State wages, tips, etc</label>
+            <label for="w2StateWages">16. State wages, tips, etc</label>
             <input type="text" class="form-control" id="w2StateWages" name="w2StateWages" >
 
         </div>
         <div class="form-group col-md">
-            <label for="w2StateIncomeTax">State income tax</label>
+            <label for="w2StateIncomeTax">17. State income tax</label>
             <input type="text" class="form-control" id="w2StateIncomeTax" name="w2StateIncomeTax" >
 
         </div>
         <div class="form-group col-md">
-            <label for="w2LocalWages">Local wages, tips, etc</label>
+            <label for="w2LocalWages">18. Local wages, tips, etc</label>
             <input type="text" class="form-control" id="w2LocalWages" name="w2LocalWages" >
 
         </div>
         <div class="form-group col-md">
-            <label for="w2LocalIncomeTip">Local income tip</label>
+            <label for="w2LocalIncomeTip">19. Local income tip</label>
             <input type="text" class="form-control" id="w2LocalIncomeTip" name="w2LocalIncomeTip" >
 
         </div>
         <div class="form-group col-md">
-            <label for="w2Locality">Locality</label>
+            <label for="w2Locality">20. Locality</label>
             <input type="text" class="form-control" id="w2Locality" name="w2Locality" >    
         </div>
     </div>
