@@ -10,8 +10,32 @@ $username_err = $password_err = $confirm_password_err = $IDerror = "";
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
+
     if (empty(trim($_POST['empID']))){
-        $IDerror="Please enter an ID";
+         $IDerror="Please enter an ID";
+    } 
+    else{
+        //check if empID was used by another user
+         $idTakenCheck=0;
+         $empId = $_POST['empID'];
+         $result = $link->query("SELECT id FROM users WHERE id=$empId");
+         if (!$result || mysqli_num_rows($result)==0) {}
+         else{
+            $idTakenCheck++;
+         }
+         if ($idTakenCheck>0){
+            $IDerror="This ID is taken by another user";
+         }
+         
+            $idNotEmployee=0;
+            $result = $link->query("SELECT empid FROM employee WHERE empid=$empId");
+            if (!$result || mysqli_num_rows($result)==0) {
+                $idNotEmployee++;
+            }
+            if ($idNotEmployee>0){
+                $IDerror="This ID does not belong to an employee";
+            }
+        
     }
  
     // Validate username
@@ -67,14 +91,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
     
     // Check input errors before inserting in database
-    if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
+    if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($IDerror)){
         
         // Prepare an insert statement
-        $sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+        $sql = "INSERT INTO users (id,username, password) VALUES (?, ?,?)";
          
         if($stmt = mysqli_prepare($link, $sql)){
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "ss", $param_username, $param_password);
+            mysqli_stmt_bind_param($stmt, "iss", $empId, $param_username, $param_password);
             
             // Set parameters
             $param_username = $username;
@@ -114,10 +138,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <h2>Sign Up</h2>
         <p>Please fill this form to create an account.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-           <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
+           <div class="form-group <?php echo (!empty($IDerror)) ? 'has-error' : ''; ?>">
                 <label>Employee ID</label>
                 <input type="text" name="empID" class="form-control" value="">
-                <span class="help-block"><?php echo $username_err; ?></span>
+                <span class="help-block"><?php echo $IDerror; ?></span>
             </div>    
             <div class="form-group <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
                 <label>Username</label>

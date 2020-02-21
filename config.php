@@ -1,6 +1,6 @@
-<?php $conn = new mysqli("localhost", "root", "", "highlandcapital");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+<?php $link = new mysqli("localhost", "root", "", "highlandcap");
+if ($link->connect_error) {
+    die("Connection failed: " . $link->connect_error);
     alert("Database error");
 }
 ?>
