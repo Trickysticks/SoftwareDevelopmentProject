@@ -53,7 +53,7 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
   <body>
     <h1 style="text-align:center"> W2 Form </h1>
     </br></br></br>
-    <form>
+    <form method="POST" action="w2controller.php">
       <div class="form-row">
       <div class="form-group col-md-3">
           <label for="w2SS">a. Employee social security number</label>
@@ -65,7 +65,7 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
         </div>
         <div class="form-group col-md-3">
           <label for="w2Wages">1. Wages,tips, other compensation</label>
-          <input type="text" class="form-control" id="w2Wages" name="w2Wages" <?php echo "value=".$salary ?> required>
+          <input type="text" class="form-control" id="w2Wages" name="w2Wages" required <?php echo "value=".$salary ?> >
         </div>
         <div class="form-group col-md-3">
             <label for="w2FederalIncomeTaxWithheld">2. Federal Income Tax Withheld</label>
@@ -82,11 +82,11 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
           <input type="text" class="form-control" id="w2EmployerAddress" name="w2EmployerAddress" >
         
           <label for="w2EmployerZipCode">c. Employer's Zip Code</label>
-          <input type="text" class="form-control" id="w2EmployerZipCode" name="w2EmployerZipCode" >  
+          <input type="text" class="form-control" id="w2EmployerZipCode" name="w2EmployerZipCode">  
         </div>
         <div class="form-group col-md-4">
           <label for="w2SocialSecurityWages">3. Social security wages</label>
-          <input type="text" class="form-control" id="w2SocialSecurityWages" name="w2SocialSecurityWages" required
+          <input type="text" class="form-control" id="w2SocialSecurityWages" name="w2SocialSecurityWages" required>
           <label for="w2MedicareWages">5. Medicare wages and tips</label>
           <input type="text" class="form-control" id="w2MedicareWages" name="w2MedicareWages" required>
           <label for="w2SocialSecurityTips">7. Social security tips</label>
@@ -207,6 +207,7 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
             <input type="text" class="form-control" id="w2Locality" name="w2Locality" >    
         </div>
     </div>
+    <button style = "margin: 0 auto; display: block;" type="submit" class="btn btn-dark">Submit</button>
   </form>
   <br> 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
