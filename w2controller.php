@@ -1,4 +1,6 @@
 <?php
+session_start();
+include("config.php");
 // Author: Anthony Calise
 // Purpose: Take data from w2 form and put into database
 $socialSecurity = $w2EIN = $w2Wages = $w2FederalIncomeTaxWithheld = 
@@ -38,11 +40,22 @@ if (isset($_POST['w2AllocatedTips'])){
 if (isset($_POST['w2DependentCareBenefits'])){
     $w2DependentCareBenefits = $_POST['w2DependentCareBenefits'];
 }
-if (isset($_POST['w2EmployeeAddress'])){
-    $w2EmployeeAddress = $_POST['w2EmployeeAddress'];
+
+$id = $_SESSION['id'];
+echo $id;
+$addressIdQuery = $link->query("SELECT AddressID from employee where empid=$id");
+$row=$addressIdQuery->fetch_assoc();
+$addressId = $row['AddressID'];
+
+
+$sql = "INSERT INTO w2 (SSN, AddressID, EIN, Compensation, SSWages, MDCWages, SSTips, FedWithold, SSTaxWithold, MDCTaxWithold, Tips, DependentCareBen)
+VALUES ($socialSecurity, $addressId, $w2EIN, $w2Wages, $w2SocialSecurityWages,$w2MedicareWages, $w2SocialSecurityTips, $w2FederalIncomeTaxWithheld, $w2SSTaxWithheld,$w2MedicareTaxWithheld,$w2AllocatedTips,$w2DependentCareBenefits)";
+
+if ($link->query($sql) === TRUE) {
+    echo "New record created successfully";
+} else {
+    echo "Error: " . $sql . "<br>" . $link->error;
 }
-if (isset($_POST['w2EmployeeZipCode'])){
-    $w2EmployeeZipCode = $_POST['w2EmployeeZipCode'];
-}
+
 // todo: just get the addressid from employee table 
 ?>

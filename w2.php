@@ -128,9 +128,9 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
           <label for="w2EmployeeLastName">e. Employee's last name</label>
           <input type="text" class="form-control" id="w2EmployeeLastName" name="w2EmployeeLastName" <?php echo 'value="' . $lastName . '" '?> >
           <label for="w2EmployeeAddress">e. Employee's address</label>
-          <input type="text" class="form-control" id="w2EmployeeAddress" name="w2EmployeeAddress" <?php echo 'value="' . $address . '" '?> >
+          <input type="text" class="form-control" id="w2EmployeeAddress" name="w2EmployeeAddress" required <?php echo 'value="' . $address . '" '?> >
           <label for="w2EmployeeZipCode">e. Employee's zip code</label>
-          <input type="text" class="form-control" id="w2EmployeeZipCode" name="w2EmployeeZipCode" <?php echo "value=".$zip ?>>
+          <input type="text" class="form-control" id="w2EmployeeZipCode" name="w2EmployeeZipCode"required <?php echo "value=".$zip ?>>
       
         </div>
         <div class="form-group col-md-4">
