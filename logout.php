@@ -11,4 +11,5 @@ session_destroy();
 // Redirect to login page
 header("location: login.php");
 exit;
+// Credit: https://www.tutorialrepublic.com/php-tutorial/php-mysql-login-system.php
 ?>

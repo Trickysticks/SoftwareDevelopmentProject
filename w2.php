@@ -1,3 +1,45 @@
+<?php
+// Author: Anthony Calise
+
+include("navbar.php");
+include("config.php");
+$currentId = $_SESSION["id"];
+$streetName = $aptNum = $city = $state = $zip = $streetNum =$firstName= $lastName = $SSN = $salary=  "";
+$employeeInfo = $link->query("SELECT * FROM employee WHERE empid=$currentId");
+while ($row=$employeeInfo->fetch_assoc()){
+  if (isset($row['FirstName']))
+    $firstName = $row['FirstName'];
+  if (isset($row['LastName']))
+    $lastName = $row['LastName'];
+  if (isset($row['SSN']))
+    $SSN = $row['SSN'];
+  if (isset($row['Salary']))
+    $salary = $row['Salary'];
+  if (isset($row['MI']))
+    $middleInitial = $row['MI'];
+}
+$employeeAddressInfo = $link->query("SELECT * from employeeaddress WHERE EmpId=$currentId ");
+while ($row = $employeeAddressInfo->fetch_assoc()){
+
+  if (isset($row['StreetNum']))
+  $streetNum = $row['StreetNum'];
+  if (isset($row['StreetName']))
+    $streetName = $row['StreetName'];
+  if (isset($row['APTNum']))
+    $aptNum = $row['APTNum'];
+  if (isset($row['City']))
+    $city = $row['City'];
+  if (isset($row['State']))
+    $state = $row['State'];
+  if (isset($row['Zip']))
+    $zip = $row['Zip'];
+
+  $address = $streetNum . " " . $streetName . " " . $aptNum . ", ". $city . ", " . $state ;
+  
+}
+
+?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -5,37 +47,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>Highland Capital Tax System</title>
   </head>
   <body>
-    <?php include("navbar.php") ?>
     <h1 style="text-align:center"> W2 Form </h1>
     </br></br></br>
     <form>
       <div class="form-row">
       <div class="form-group col-md-3">
           <label for="w2SS">a. Employee social security number</label>
-          <input type="text" class="form-control" id="w2SS" name="w2SS">
+          <input type="text" class="form-control" id="w2SS" name="w2SS" <?php echo "value=".$SSN ?> required>
         </div>
         <div class="form-group col-md-3">
           <label for="w2EIN">b. Employer Identifier Number (EIN)</label>
-          <input type="text" class="form-control" id="w2EIN" name="w2EIN">
+          <input type="text" class="form-control" id="w2EIN" name="w2EIN" required>
         </div>
         <div class="form-group col-md-3">
           <label for="w2Wages">1. Wages,tips, other compensation</label>
-          <input type="text" class="form-control" id="w2Wages" name="w2Wages" >
+          <input type="text" class="form-control" id="w2Wages" name="w2Wages" <?php echo "value=".$salary ?> required>
         </div>
         <div class="form-group col-md-3">
             <label for="w2FederalIncomeTaxWithheld">2. Federal Income Tax Withheld</label>
-            <input type="text" class="form-control" id="w2FederalIncomeTaxWithheld" name="w2FederalIncomeTaxWithheld" >
+            <input type="text" class="form-control" id="w2FederalIncomeTaxWithheld" name="w2FederalIncomeTaxWithheld" required>
           </div>
       </div>
       <hr>
       <div class="form-row">
         <div class="form-group col-md-4">
           <label for="w2EmployerName">c. Employer's Name</label>
-          <input type="text" class="form-control" id="w2EmployerName" name="w2EmployerName" >
+          <input type="text" class="form-control" id="w2EmployerName" name="w2EmployerName"  >
 
           <label for="w2EmployerAddress">c. Employer Address</label>
           <input type="text" class="form-control" id="w2EmployerAddress" name="w2EmployerAddress" >
@@ -45,21 +86,21 @@
         </div>
         <div class="form-group col-md-4">
           <label for="w2SocialSecurityWages">3. Social security wages</label>
-          <input type="text" class="form-control" id="w2SocialSecurityWages" name="w2SocialSecurityWages" >
+          <input type="text" class="form-control" id="w2SocialSecurityWages" name="w2SocialSecurityWages" required
           <label for="w2MedicareWages">5. Medicare wages and tips</label>
-          <input type="text" class="form-control" id="w2MedicareWages" name="w2MedicareWages">
+          <input type="text" class="form-control" id="w2MedicareWages" name="w2MedicareWages" required>
           <label for="w2SocialSecurityTips">7. Social security tips</label>
-          <input type="text" class="form-control" id="w2SocialSecurityTips" name="w2SocialSecurityTips" >
+          <input type="text" class="form-control" id="w2SocialSecurityTips" name="w2SocialSecurityTips" required>
         </div>
         <div class="form-group col-md-4">
             <label for="w2SSTaxWithheld">4. Social security tax withheld</label>
-            <input type="text" class="form-control" id="w2SSTaxWithheld" name="w2SSTaxWithheld" >
+            <input type="text" class="form-control" id="w2SSTaxWithheld" name="w2SSTaxWithheld" required>
 
             <label for="w2MedicareTaxWithheld">6. Medicare tax withheld</label>
-            <input type="text" class="form-control" id="w2MedicareTaxWithheld" name="w2MedicareTaxWithheld" >
+            <input type="text" class="form-control" id="w2MedicareTaxWithheld" name="w2MedicareTaxWithheld" required>
         
             <label for="w2AllocatedTips">8. Allocated tips</label>
-            <input type="text" class="form-control" id="w2AllocatedTips" name="w2AllocatedTips" >  
+            <input type="text" class="form-control" id="w2AllocatedTips" name="w2AllocatedTips" required>  
         </div>
       </div>
     </br><hr>
@@ -74,22 +115,22 @@
             </div>
             <div class="form-group col-md-4">
                 <label for="w2DependentCareBenefits">10. Dependent care benefits</label>
-                <input type="text" class="form-control" id="w2DependentCareBenefits" name="w2DependentCareBenefits" >   
+                <input type="text" class="form-control" id="w2DependentCareBenefits" name="w2DependentCareBenefits" required >   
             </div>
         </div>
     </br> <hr>
       <div class="form-row">
         <div class="form-group col-md-4">
           <label for="w2EmployeeFirstName">e. Employee's first name</label>
-          <input type="text" class="form-control" id="w2EmployeeFirstName" name="w2EmployeeFirstName" >
+          <input type="text" class="form-control" id="w2EmployeeFirstName" name="w2EmployeeFirstName" <?php echo "value=".$firstName ?> >
           <label for="w2EmployeeInitial">e. Employee's initial</label>
-          <input type="text" class="form-control" id="w2EmployeeInitial" name="w2EmployeeInitial" >
+          <input type="text" class="form-control" id="w2EmployeeInitial" name="w2EmployeeInitial" <?php echo "value=".$middleInitial ?> >
           <label for="w2EmployeeLastName">e. Employee's last name</label>
-          <input type="text" class="form-control" id="w2EmployeeLastName" name="w2EmployeeLastName" >
+          <input type="text" class="form-control" id="w2EmployeeLastName" name="w2EmployeeLastName" <?php echo 'value="' . $lastName . '" '?> >
           <label for="w2EmployeeAddress">e. Employee's address</label>
-          <input type="text" class="form-control" id="w2EmployeeAddress" name="w2EmployeeAddress" >
+          <input type="text" class="form-control" id="w2EmployeeAddress" name="w2EmployeeAddress" <?php echo 'value="' . $address . '" '?> >
           <label for="w2EmployeeZipCode">e. Employee's zip code</label>
-          <input type="text" class="form-control" id="w2EmployeeZipCode" name="w2EmployeeZipCode" >
+          <input type="text" class="form-control" id="w2EmployeeZipCode" name="w2EmployeeZipCode" <?php echo "value=".$zip ?>>
       
         </div>
         <div class="form-group col-md-4">
@@ -134,7 +175,7 @@
     <div class="form row">
         <div class="form-group col-md">
             <label for="w2State">15. State</label>
-            <input type="text" class="form-control" id="w2State" name="w2State" >
+            <input type="text" class="form-control" id="w2State" name="w2State" <?php echo "value=".$state ?> >
         </div>
         <div class="form-group col-md">
             <label for="w2EmployeeStateID">15. Employee's state ID number</label>

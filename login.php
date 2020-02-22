@@ -1,4 +1,6 @@
 <?php
+
+
 // Initialize the session
 session_start();
  
@@ -7,6 +9,7 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
     header("location: index.php");
     exit;
 }
+
  
 // Include config file
 require_once "config.php";
@@ -85,6 +88,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     
     // Close connection
     mysqli_close($link);
+    // Credit: https://www.tutorialrepublic.com/php-tutorial/php-mysql-login-system.php
 }
 ?>
  
@@ -94,13 +98,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="css/style.css">
     <style type="text/css">
         body{ font: 14px sans-serif; }
-        .wrapper{ width: 350px; padding: 20px; }
+        .wrapper{ margin: 0 auto; display:block;  width: 450px; padding: 20px; }
     </style>
 </head>
 <body>
     <div class="wrapper">
+        <img width=400px height=80px src="images/hclogo.png">
         <h2>Login</h2>
         <p>Please fill in your credentials to login.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
