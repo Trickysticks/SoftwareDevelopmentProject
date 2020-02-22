@@ -7,7 +7,7 @@
 }
 
 #homePageDiv{
-    background-image: url("images/background.png");
+    background-image: url("../images/background.png");
     height:400px;
     width:65%;
     margin:0 auto;
@@ -16,3 +16,4 @@
 h5{
     color:white;
 }
+
