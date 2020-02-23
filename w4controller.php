@@ -68,10 +68,10 @@ if (!$checkW4 || mysqli_num_rows($checkW4)==0) {
 else{
     $link->query("DELETE FROM w4 WHERE SSN=$socialSecurity");
     $sql = "INSERT INTO w4 (SSN, AddressID, FilingStatus, DifferentFileStatus, EIN, PersAllowance, DeductAdjAdIncome,OtherIncome,Deductions, ExtraWithholding, MultiEmploy, EffectDateWithold, TermDateWithold)
-    VALUES ($socialSecurity,$addressId,$filingStatus,$filingStatus,$w4EIN,'5','5', $otherIncome,$deductions,$extraWithholding,'$multiJob', '$employmentDate','$employmentDate')";  
+    VALUES ($socialSecurity,'$addressId','$filingStatus','$filingStatus',$w4EIN,'5','5', $otherIncome,$deductions,$extraWithholding,'$multiJob', '$employmentDate','$employmentDate')";  
 }
 if (!$link->query($sql)){
-    header("Location: error.php"); 
+   echo("Error description: " .$link -> error); 
 }
 else{
     header("Location: success.php");
