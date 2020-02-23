@@ -9,6 +9,10 @@ $w2AllocatedTips = $w2DependentCareBenefits = $w2EmployeeAddress = $w2EmployeeZi
 if (isset($_POST['w2SS'])){
     $socialSecurity = $_POST['w2SS'];
 }
+else{
+    header("Location: w2.php");
+    exit;
+}
 if (isset($_POST['w2EIN'])){
     $w2EIN = $_POST['w2EIN'];
 }

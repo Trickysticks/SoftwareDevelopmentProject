@@ -116,11 +116,11 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
         </div>
         <div class="form-group col-md-4">
           <label for="w2SocialSecurityWages">3. Social security wages<span style="color: #e32;">*</span></label>
-          <input type="text" class="form-control" id="w2SocialSecurityWages" name="w2SocialSecurityWages" required>
+          <input type="text" class="form-control" id="w2SocialSecurityWages" onkeypress="return isNumberKey(event,this)" name="w2SocialSecurityWages" required>
           <label for="w2MedicareWages">5. Medicare wages and tips<span style="color: #e32;">*</span></label>
-          <input type="text" class="form-control" id="w2MedicareWages" name="w2MedicareWages" required>
+          <input type="text" class="form-control" id="w2MedicareWages" onkeypress="return isNumberKey(event,this)" name="w2MedicareWages" required>
           <label for="w2SocialSecurityTips">7. Social security tips<span style="color: #e32;">*</span></label>
-          <input type="text" class="form-control" id="w2SocialSecurityTips" name="w2SocialSecurityTips" required>
+          <input type="text" class="form-control" id="w2SocialSecurityTips" onkeypress="return isNumberKey(event,this)" name="w2SocialSecurityTips" required>
         </div>
         <div class="form-group col-md-4">
             <label for="w2SSTaxWithheld">4. Social security tax withheld<span style="color: #e32;">*</span></label>
@@ -130,7 +130,7 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
             <input type="text" class="form-control" id="w2MedicareTaxWithheld" name="w2MedicareTaxWithheld" required disabled value="Calculated by system">
         
             <label for="w2AllocatedTips">8. Allocated tips<span style="color: #e32;">*</span></label>
-            <input type="text" class="form-control" id="w2AllocatedTips" name="w2AllocatedTips" required>  
+            <input type="text" class="form-control" id="w2AllocatedTips" onkeypress="return isNumberKey(event,this)"  name="w2AllocatedTips" required>  
         </div>
       </div>
     </br><hr>
@@ -145,7 +145,7 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
             </div>
             <div class="form-group col-md-4">
                 <label for="w2DependentCareBenefits">10. Dependent care benefits<span style="color: #e32;">*</span></label>
-                <input type="text" class="form-control" id="w2DependentCareBenefits" name="w2DependentCareBenefits" required >   
+                <input type="text" class="form-control" id="w2DependentCareBenefits" onkeypress="return isNumberKey(event,this)" name="w2DependentCareBenefits" required >   
             </div>
         </div>
     </br> <hr>
