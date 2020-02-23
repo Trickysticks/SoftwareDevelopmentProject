@@ -53,6 +53,10 @@ else{
     $sql = "INSERT INTO w2 (SSN, AddressID, EIN, Compensation, SSWages, MDCWages, SSTips, FedWithold, SSTaxWithold, MDCTaxWithold, Tips, DependentCareBen)
     VALUES ($socialSecurity, $addressId, $w2EIN, $w2Wages, $w2SocialSecurityWages,$w2MedicareWages, $w2SocialSecurityTips, $w2FederalIncomeTaxWithheld, $w2SSTaxWithheld,$w2MedicareTaxWithheld,$w2AllocatedTips,$w2DependentCareBenefits)"; 
 }
-$link->query($sql);
-header("Location: success.php");
+if (!$link->query($sql)){
+    header("Location: error.php"); 
+}
+else{
+    header("Location: success.php");
+}   
 ?>
