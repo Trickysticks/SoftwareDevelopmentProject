@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Feb 22, 2020 at 05:25 PM
--- Server version: 5.7.26
--- PHP Version: 7.2.18
+-- Generation Time: Feb 23, 2020 at 09:27 PM
+-- Server version: 10.4.10-MariaDB
+-- PHP Version: 7.3.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -484,7 +484,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `created_at` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -521,6 +521,13 @@ CREATE TABLE IF NOT EXISTS `w2` (
   KEY `EIN` (`EIN`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `w2`
+--
+
+INSERT INTO `w2` (`SSN`, `AddressID`, `EIN`, `Compensation`, `SSWages`, `MDCWages`, `SSTips`, `FedWithold`, `SSTaxWithold`, `MDCTaxWithold`, `Tips`, `DependentCareBen`) VALUES
+(7648, '3', 135564938, '245.00', '2467.00', '648.00', '36548.00', '5246.00', '152.95', '9.40', '3578.00', '35768.00');
+
 -- --------------------------------------------------------
 
 --
@@ -536,6 +543,9 @@ CREATE TABLE IF NOT EXISTS `w4` (
   `EIN` int(11) DEFAULT NULL,
   `PersAllowance` decimal(18,2) DEFAULT NULL,
   `DeductAdjAdIncome` decimal(18,2) DEFAULT NULL,
+  `OtherIncome` int(11) NOT NULL,
+  `Deductions` int(11) NOT NULL,
+  `ExtraWithholding` int(11) NOT NULL,
   `MultiEmploy` varchar(100) DEFAULT NULL,
   `EffectDateWithold` date DEFAULT NULL,
   `TermDateWithold` date DEFAULT NULL,
