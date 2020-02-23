@@ -4,7 +4,7 @@
 include("navbar.php");
 include("config.php");
 $currentId = $_SESSION["id"];
-$streetName = $aptNum = $city = $state = $zip = $streetNum =$firstName= $lastName = $SSN = $salary=  "";
+$deptId = $middleInitial = $streetName = $aptNum = $city = $state = $zip = $streetNum =$firstName= $lastName = $SSN = $salary=  "";
 $employeeInfo = $link->query("SELECT * FROM employee WHERE empid=$currentId");
 while ($row=$employeeInfo->fetch_assoc()){
   if (isset($row['FirstName']))
@@ -24,6 +24,8 @@ while ($row=$employeeInfo->fetch_assoc()){
 $dept = $link->query("SELECT * FROM department WHERE deptid=$deptId");
 $row = $dept->fetch_assoc();
 $EIN = $row['EIN'];
+
+$emplrName = $emplrStAdd = $emplrCity = $emplrState = $emplrZip = $emplrSuiteNum = $emplrStNum = "";
 
 $employerInfo = $link->query("SELECT * FROM employer WHERE EIN=$EIN");
 $row = $employerInfo->fetch_assoc();
@@ -85,7 +87,7 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
       <div class="form-row">
       <div class="form-group col-md-3">
           <label for="w2SS">a. Employee social security number <span style="color: #e32;">*</span></label>
-          <input type="text" class="form-control" id="w2SS" name="w2SS" <?php echo "value=".$SSN ?> required>
+          <input type="text" class="form-control" id="w2SS" name="w2SS" <?php echo "value=".$SSN ?> required readonly>
         </div>
         <div class="form-group col-md-3">
           <label for="w2EIN">b. Employer Identifier Number (EIN)<span style="color: #e32;">*</span></label>
@@ -152,13 +154,13 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
           <label for="w2EmployeeFirstName">e. Employee's first name</label>
           <input type="text" class="form-control" id="w2EmployeeFirstName" name="w2EmployeeFirstName" <?php echo "value=".trim($firstName) ?> disabled >
           <label for="w2EmployeeInitial">e. Employee's initial</label>
-          <input type="text" class="form-control" id="w2EmployeeInitial" name="w2EmployeeInitial" <?php echo "value=".$middleInitial ?> >
+          <input type="text" class="form-control" id="w2EmployeeInitial" name="w2EmployeeInitial" <?php echo "value=".$middleInitial ?> readonly>
           <label for="w2EmployeeLastName">e. Employee's last name</label>
           <input type="text" class="form-control" id="w2EmployeeLastName" name="w2EmployeeLastName" <?php echo 'value="' . trim($lastName) . '" '?> disabled>
           <label for="w2EmployeeAddress">e. Employee's address</label>
-          <input type="text" class="form-control" id="w2EmployeeAddress" name="w2EmployeeAddress" required <?php echo 'value="' . $address . '" '?> >
+          <input type="text" class="form-control" id="w2EmployeeAddress" name="w2EmployeeAddress" required readonly <?php echo 'value="' . $address . '" '?> >
           <label for="w2EmployeeZipCode">e. Employee's zip code</label>
-          <input type="text" class="form-control" id="w2EmployeeZipCode" name="w2EmployeeZipCode"required <?php echo "value=".$zip ?>>
+          <input type="text" class="form-control" id="w2EmployeeZipCode" name="w2EmployeeZipCode"required readonly <?php echo "value=".$zip ?>>
       
         </div>
         <div class="form-group col-md-4">
