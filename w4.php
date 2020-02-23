@@ -84,32 +84,32 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
       <div class="form-row">
 	   <div class="form-group col-md-3">
 		 <label for="w4EmployeeFirstName">a. Employee's first name</label>
-          <input type="text" class="form-control" id="w4EmployeeFirstName" name="w4EmployeeFirstName" <?php echo "value=".trim($firstName) ?>>
+          <input type="text" class="form-control" id="w4EmployeeFirstName" name="w4EmployeeFirstName" required <?php echo "value=".trim($firstName) ?>>
         </div>
 		
 		<div class="form-group col-md-3">
 		 <label for="w4EmployeeInitial">a. Employee's initial</label>
-          <input type="text" class="form-control" id="w4EmployeeInitial" name="w4EmployeeInitial" <?php echo "value=".$middleInitial ?>>
+          <input type="text" class="form-control" id="w4EmployeeInitial" name="w4EmployeeInitial" required <?php echo "value=".$middleInitial ?>>
           </div>
 		  
 		  <div class="form-group col-md-3">
 		 <label for="w4EmployeeLastName">a. Employee's last name</label>
-          <input type="text" class="form-control" id="w4EmployeeLastName" name="w4EmployeeLastName" <?php echo 'value="' . trim($lastName) . '" '?>>
+          <input type="text" class="form-control" id="w4EmployeeLastName" name="w4EmployeeLastName"  required <?php echo 'value="' . trim($lastName) . '" '?>>
           </div>
 		  
 		    <div class="form-group col-md-3">
 		  <label for="w4EmployeeAddress">a. Employee's address</label>
-          <input type="text" class="form-control" id="w4EmployeeAddress" name="w4EmployeeAddress" <?php echo 'value="' . $address . '" '?>>
+          <input type="text" class="form-control" id="w4EmployeeAddress" name="w4EmployeeAddress"  required <?php echo 'value="' . $address . '" '?>>
           </div>
 		  
 		   <div class="form-group col-md-3">
 		   <label for="w4EmployeeZipCode">a. Employee's zip code</label>
-          <input type="text" class="form-control" id="w4EmployeeZipCode" name="w4EmployeeZipCode" <?php echo "value=".$zip ?>>
+          <input type="text" class="form-control" id="w4EmployeeZipCode" name="w4EmployeeZipCode" required <?php echo "value=".$zip ?>>
           </div>
 		  
           <div class="form-group col-md-3">
           <label for="w4SS">b. Employee social security number</label>
-          <input type="text" class="form-control" id="w4SS" name="w4SS" <?php echo "value=".$SSN ?>>
+          <input type="text" class="form-control" id="w4SS" name="w4SS" required <?php echo "value=".$SSN ?>>
         </div>
       </div>
      
@@ -142,7 +142,10 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
 		  <p>(a) Use the estimator at www.irs.org/W4App for the most accurate withholding for this step (and Steps 3-4b) OR </p>
 		  <p>(b) Use the Multiple Jobs Worksheet on page 3 and enter the result in Step 4(c) below for roughly accurate witholding OR</p>
 		  <p>(c) If there are only two jobs total, you make check this box. Do the same on form W-4 for the other job. This option is accurate for jobs with similar pay; otherwise, more tax than neccessary may be withheld </p>
-          <input type="checkbox" id="twoJobs" name="twoJobs" value="Yes">
+          <label for="yes">Yes I have multiple jobs or I am married filing jointly</label>
+		  <input type="radio" id="twoJobs" name="twoJobs" value="Yes">
+		  <label for="no">No I don't have multiple jobs or I am not married filing jointly</label>
+		  <input type="radio" id="twoJobs" name="twoJobs" value="No">
         </div>
 
   
@@ -151,13 +154,13 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
         <div class="form-group col-md-4">
 		  <p> If your income will be $200,000 or less ($400,000 or less if married filing jointly):</p>
 		  <label for="qualifyingChildren" style="margin-left: 40px">Multiply the number of qualifiying children under age 17 by $2000</label>
-          <input type="text" class="form-control" id="qualifyingChildren" name="qualifyingChildren" style="margin-left: 40px">
+          <input type="text" class="form-control" id="qualifyingChildren" name="qualifyingChildren" style="margin-left: 40px" required>
 		  
 		  <label for="otherDependents" style="margin-left: 40px">Mulitply the number of other dependents by $500</label>
-          <input type="text" class="form-control" id="otherDependents" name="otherDependents" style="margin-left: 40px">
+          <input type="text" class="form-control" id="otherDependents" name="otherDependents" style="margin-left: 40px" required>
 		  <br></br>
 		  <label for="totalDependents">Add the amounts above and enter the total here</label>
-          <input type="text" class="form-control" id="totalDependents" name="totalDependents">
+          <input type="text" class="form-control" id="totalDependents" name="totalDependents" required>
         </div>
 		 
 
@@ -181,16 +184,16 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
         
 		   <div class="form-group col-md-4">
 		 <label for="w4EmployerName">Employer Name</label>
-          <input type="text" class="form-control" id="w4EmployerName" name="w4EmployerName" <?php echo 'value="' . $emplrName . '" '?>>
+          <input type="text" class="form-control" id="w4EmployerName" name="w4EmployerName" <?php echo 'value="' . $emplrName . '" '?> required >
 
 		 <label for="w4EmployerAddress">Employer Address</label>
-          <input type="text" class="form-control" id="w4EmployerAddress" name="w4EmployerAddress" <?php echo 'value="' . $employerAddress . '" '?>>
+          <input type="text" class="form-control" id="w4EmployerAddress" name="w4EmployerAddress" <?php echo 'value="' . $employerAddress . '" '?> required>
           
 		 <label for="w4EmploymentDate">First Date of Employment</label>
-          <input type="text" class="form-control" id="w4EmploymentDate" name="w4EmploymentDate" >
+          <input type="date" class="form-control" id="w4EmploymentDate" name="w4EmploymentDate" required>
 		    
 		  <label for="w4EIN">Employer Identification Number</label>
-          <input type="text" class="form-control" id="w4EIN" name="w4EIN" <?php echo "value=".$EIN ?>>
+          <input type="text" class="form-control" id="w4EIN" name="w4EIN" <?php echo "value=".$EIN ?> required>
           
         </div>
 		 <button style = "margin: 0 auto; display: block;" type="submit" class="btn btn-dark">Submit</button>
