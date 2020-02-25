@@ -31,8 +31,12 @@
                   <a href="w2.php">
                   <button type="button" class="btn-lg btn-dark">Employee W2</button>
                   </a>
+				  <a href="941.php">
                   <button type="button" class="btn-lg btn-dark">941 Form</button>
-                  <button type="button" class="btn-lg btn-dark">944 Form</button>
+				  </a>
+				  <a href="944.php">
+				  <button type="button" class="btn-lg btn-dark">944 Form</button>
+				  </a>
                </div>              
               </div>
         </div>
