@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Feb 23, 2020 at 09:27 PM
--- Server version: 10.4.10-MariaDB
--- PHP Version: 7.3.12
+-- Generation Time: Feb 29, 2020 at 06:20 PM
+-- Server version: 5.7.26
+-- PHP Version: 7.2.18
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -484,7 +484,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `created_at` datetime DEFAULT current_timestamp(),
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -541,8 +541,6 @@ CREATE TABLE IF NOT EXISTS `w4` (
   `FilingStatus` varchar(100) DEFAULT NULL,
   `DifferentFileStatus` varchar(100) DEFAULT NULL,
   `EIN` int(11) DEFAULT NULL,
-  `PersAllowance` decimal(18,2) DEFAULT NULL,
-  `DeductAdjAdIncome` decimal(18,2) DEFAULT NULL,
   `OtherIncome` int(11) NOT NULL,
   `Deductions` int(11) NOT NULL,
   `ExtraWithholding` int(11) NOT NULL,
