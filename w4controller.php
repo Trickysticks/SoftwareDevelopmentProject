@@ -62,13 +62,13 @@ $addressId = $row['AddressID'];
 $checkW4 = $link->query("SELECT * FROM w4 WHERE ssn=$socialSecurity");
 
 if (!$checkW4 || mysqli_num_rows($checkW4)==0) {
-    $sql = "INSERT INTO w4 (SSN, AddressID, FilingStatus, DifferentFileStatus, EIN, PersAllowance, DeductAdjAdIncome,OtherIncome,Deductions,ExtraWithholding,MultiEmploy, EffectDateWithold, TermDateWithold)
-    VALUES ($socialSecurity,'$addressId','$filingStatus','$filingStatus',$w4EIN,'5','5', $otherIncome,$deductions,$extraWithholding,'$multiJob','$employmentDate','$employmentDate')";    
+    $sql = "INSERT INTO w4 (SSN, AddressID, FilingStatus, DifferentFileStatus, EIN,OtherIncome,Deductions,ExtraWithholding,MultiEmploy, EffectDateWithold, TermDateWithold)
+    VALUES ($socialSecurity,'$addressId','$filingStatus','$filingStatus',$w4EIN,$otherIncome,$deductions,$extraWithholding,'$multiJob','$employmentDate','2020/12/31')";    
 }
 else{
     $link->query("DELETE FROM w4 WHERE SSN=$socialSecurity");
-    $sql = "INSERT INTO w4 (SSN, AddressID, FilingStatus, DifferentFileStatus, EIN, PersAllowance, DeductAdjAdIncome,OtherIncome,Deductions, ExtraWithholding, MultiEmploy, EffectDateWithold, TermDateWithold)
-    VALUES ($socialSecurity,'$addressId','$filingStatus','$filingStatus',$w4EIN,'5','5', $otherIncome,$deductions,$extraWithholding,'$multiJob', '$employmentDate','$employmentDate')";  
+    $sql = "INSERT INTO w4 (SSN, AddressID, FilingStatus, DifferentFileStatus, EIN,OtherIncome,Deductions,ExtraWithholding,MultiEmploy, EffectDateWithold, TermDateWithold)
+    VALUES ($socialSecurity,'$addressId','$filingStatus','$filingStatus',$w4EIN,$otherIncome,$deductions,$extraWithholding,'$multiJob','$employmentDate','2020/12/31')";
 }
 if (!$link->query($sql)){
    echo("Error description: " .$link -> error); 
