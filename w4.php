@@ -72,6 +72,8 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <title>Highland Capital Tax System</title>
   </head>
   <body>
@@ -152,13 +154,13 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
         <div class="form-group col-md-4">
 		  <p> If your income will be $200,000 or less ($400,000 or less if married filing jointly):</p>
 		  <label for="qualifyingChildren" style="margin-left: 40px">Multiply the number of qualifiying children under age 17 by $2000</label>
-          <input type="text" class="form-control" id="qualifyingChildren" name="qualifyingChildren" style="margin-left: 40px" required>
+          <input type="text" class="form-control" id="qualifyingChildren" name="qualifyingChildren" onkeypress="return isNumberKey(event,this)" style="margin-left: 40px" required>
 		  
 		  <label for="otherDependents" style="margin-left: 40px">Mulitply the number of other dependents by $500</label>
-          <input type="text" class="form-control" id="otherDependents" name="otherDependents" style="margin-left: 40px" required>
+          <input type="text" class="form-control" id="otherDependents" name="otherDependents" onkeypress="return isNumberKey(event,this)" style="margin-left: 40px" required>
 		  <br></br>
 		  <label for="totalDependents">Add the amounts above and enter the total here</label>
-          <input type="text" class="form-control" id="totalDependents" name="totalDependents" required>
+          <input type="text" class="form-control" id="totalDependents" name="totalDependents" onkeypress="return isNumberKey(event,this)" required>
         </div>
 		 
 
@@ -168,13 +170,13 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
         <div class="form-group col-md-4">
 		  <p>(a) Other income (not from jobs). If you want tax withheld from other income you expect this year that won't have withholding, 
 		  enter the amount of other income here. This may include interest, other dividends, and retirement income</p>
-          <input type="text" class="form-control" id="otherIncome" name="otherIncome">
+          <input type="text" class="form-control" id="otherIncome" name="otherIncome" onkeypress="return isNumberKey(event,this)">
 		  
 		   <p>(b) Deductions. If you expect to claim deductions other than the standard deduction and want to reduce your withholding, use the deductions worksheet on page 3 and enter the result here</p>
-          <input type="text" class="form-control" id="deductions" name="deductions">
+          <input type="text" class="form-control" id="deductions" name="deductions" onkeypress="return isNumberKey(event,this)">
 		  
 		   <p>(c) Extra withholding. Enter any additional tax you want withheld each pay period</p>
-          <input type="text" class="form-control" id="extraWithholding" name="extraWithholding">
+          <input type="text" class="form-control" id="extraWithholding" name="extraWithholding" onkeypress="return isNumberKey(event,this)">
         </div>
 		 
 		 
@@ -198,7 +200,10 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
 		 
 </form>
 
-
+<script src="js/scripts.js">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   
     </body>
 </html>
