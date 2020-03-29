@@ -1,3 +1,153 @@
+<?php 
+include("navbar.php");
+include("config.php");
+//Author: Christine Wasserman
+$currentId = $_SESSION["id"];
+
+$deptId = $middleInitial = $streetName = $aptNum = $city = $state = $zip = $streetNum =$firstName= $lastName = $SSN = $salary=  "";
+//puling all info from employee table
+$employeeInfo = $link->query("SELECT * FROM employee WHERE empid=$currentId");
+while ($row=$employeeInfo->fetch_assoc()){
+  if (isset($row['FirstName']))
+    $firstName = $row['FirstName'];
+  if (isset($row['LastName']))
+    $lastName = filter_var($row['LastName']);
+  if (isset($row['Title']))
+    $Title = $row['Title'];
+if (isset($row['Empid']))
+    $Empid = $row['Empid'];
+  if (isset($row['PTIN']))
+    $PTIN = $row['PTIN'];
+}
+//combining employee name ; first and last
+$employeeName = $firstName . " " . $lastName;
+
+//pulling all info from employer table
+$employerInfo = $link->query("SELECT * FROM employer");
+$row = $employerInfo->fetch_assoc();
+if (isset($row['EIN']))
+  $EIN = $row['EIN'];
+if (isset($row['EmplrName']))
+  $emplrName = $row['EmplrName'];
+if (isset($row['EmplrStNum']))
+  $emplrStNum = $row['EmplrStNum'];
+if (isset($row['EmplrStAdd']))
+  $emplrStAdd = $row['EmplrStAdd'];
+if (isset($row['EmplrSuiteNum']))
+  $emplrSuiteNum = $row['EmplrSuiteNum'];
+if (isset($row['EmplrCity']))
+  $emplrCity = $row['EmplrCity'];
+if (isset($row['EmplrState']))
+  $emplrState = $row['EmplrState'];
+if (isset($row['EmplrZip']))
+  $emplrZip = $row['EmplrZip'];
+if (isset($row['CloseDate']))
+  $CloseDate = $row['CloseDate'];
+
+//combining employer address into 2 rows
+$employerAddress1 = $emplrStNum . " " . $emplrStAdd . " " . $emplrSuiteNum;
+$employerAddress2 =$emplrCity . ", " . $emplrState . " " . $emplrZip;
+
+//pulling all info from W2 table-- this will continuously be populated with new data as employees add their W4 information
+$W2Info = $link->query("SELECT * FROM W2");
+$row = $W2Info->fetch_assoc();
+if (isset($row['Compensation']))
+  $Compensation = $row['Compensation'];
+if (isset($row['SSWages']))
+  $SSWages = $row['SSWages'];
+if (isset($row['MDCWages']))
+  $MDCWages = $row['MDCWages'];
+if (isset($row['SSTips']))
+  $SSTips = $row['SSTips'];
+if (isset($row['FedWithold']))
+  $FedWithold = $row['FedWithold'];
+if (isset($row['SSTaxWithold']))
+  $SSTaxWithold = $row['SSTaxWithold'];
+if (isset($row['MDCTaxWithold']))
+  $MDCTaxWithold = $row['MDCTaxWithold'];
+if (isset($row['Tips']))
+  $Tips = $row['Tips'];
+if (isset($row['DependentCareBen']))
+  $DependentCareBen = $row['DependentCareBen'];
+
+//pulling all data from payroll table 
+$PayrollInfo = $link->query("SELECT * FROM Payroll");
+$row = $PayrollInfo->fetch_assoc();
+if (isset($row['BiWeekSalary']))
+  $BiWeekSalary = $row['BiWeekSalary'];
+if (isset($row['Deductions']))
+  $Deductions = $row['Deductions'];
+if (isset($row['Medical']))
+  $Medical = $row['Medical'];
+if (isset($row['Dental']))
+  $Dental = $row['Dental'];
+if (isset($row['Vision']))
+  $Vision = $row['Vision'];
+if (isset($row['MDCTax']))
+  $MDCTax = $row['MDCTax'];
+if (isset($row['SSTax']))
+  $SSTax = $row['SSTax'];
+if (isset($row['FEDTax']))
+  $FEDTax = $row['FEDTax'];
+if (isset($row['STATETax']))
+  $STATETax = $row['STATETax'];
+if (isset($row['PAyrollMonth']))
+  $PAyrollMonth = $row['PAyrollMonth'];
+
+
+
+
+//---- Possbile Controller ???? 
+
+//Calculating total columns for compensation, SS wages, SS tips and MDC wages
+//$compensationTotal = mysqli_query(link,"SELECT SUM(compensation+SSWages+MDCWages+SSTips) as comp_sum FROM w2");
+//$row = mysqli_fetch_array($compensationTotal);
+//$sum = $row['comp_sum'];
+
+$SSWagesTax = number_format($SSWages * .124,2);
+$SSTipsTax = number_format($SSTips * .0124,2);
+$MDCWagesTax = number_format($MDCWages * .029,2);
+
+$TotalTax= $SSWagesTax+ $SSTipsTax+ $MDCWagesTax;
+$TotalTaxBeforeAdj= $FedWithold +$TotalTax;
+$CYAdj = 0; //0 is a place holder for $CYAdj
+$TotTaxAdj= $TotalTaxBeforeAdj + 0; //0 is a place holder for $CYAdj-not sure what current year adjustment should be total of
+$SmlBusCred = 0; //0 is a place holder for $SmlBusCred
+$ToTaxAdjb = $TotTaxAdj- $SmlBusCred;
+
+//To populate monthly deposit schedule and tax liability secontion 13.a-l
+//$DepositSchedule =  mysqli_query("Select sum(MDCTax+SSTax+FEDTax+STATETax) as dep_Sched from payroll group by payrollMonth");
+//$row = mysqli_fetch_array($DepositSchedule);
+//$sum = $row[dep_Sched]; 
+//below is a test to see how it populates.
+$jan = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'jan'");
+$feb = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'feb'");
+$march = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'march'");
+$april = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'april'");
+$may = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'may'");
+$june = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'june'");
+$july = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'july'");
+$aug = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'aug'");
+$sept = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'sept'");
+$oct = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'oct'");
+$nov = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'nov'");
+$dec = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'dec'");
+
+$numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Employee group by empid");
+
+
+
+
+
+//---- END Possible Controller ???
+
+
+
+
+?>
+
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -9,16 +159,13 @@
     <title>Highland Capital Tax System</title>
   </head>
   <body>
-	
-<body>
-<?php include("navbar.php") ?>
-
 <div><H1><center>944 Form </center></h1></div></br>
+  
 <table>
 	<tr>
 		<td colspan="4">
 		<td><label for="944EIN">Employer identification number (EIN)</label>
-		<td><td><input type="text" class="form-control" id="944EIN" name="944EIN" >
+		<td><td><input type="text" class="form-control" id="944EIN" name="944EIN" readonly required <?php echo "value=".$EIN ?> >
 			</div>
 		</td>
 	</tr>
@@ -26,56 +173,49 @@
 		<td colspan="4">
 		<td>
 			<label for="944Name">Name</label>
-			<td><td><input type="text" class="form-control" id="944Name" name="944Name" >
+			<td><td><input type="text" class="form-control" id="944Name" name="944Name" disabled <?php echo 'value="' . $emplrName . '" '?> >
 			</div></td>
 		</tr>	
-		<tr>
-		<td colspan="4">
-		<td>
-			<label for="944Address">Address</label>
-			<td><td><input type="text" class="form-control" id="944Address" name="944Address" >
-			</div></td>
-		</tr>	
-			
+		
 		<tr>
 		<td colspan="4">
 		<td>
 			<label for="944Number">Number</label>
-			<TD><td><input type="text" class="form-control" id="944Number" name="944Number" >
+			<TD><td><input type="text" class="form-control" id="944Number" name="944Number" readonly required <?php echo "value=".$emplrStNum ?>>
 			</div></td>
 		</tr>	
 		<tr>
 		<td colspan="4">
 		<td>
 			<label for="944Street">Street</label>
-			<TD><td><input type="text" class="form-control" id="944Street" name="944Street" >
+			<TD><td><input type="text" class="form-control" id="944Street" name="944Street" readonly required <?php echo "value=".$emplrStAdd ?>>
 			</div></td>
 		</tr>
 		<tr>
 		<td colspan="4">
 		<td>
 			<label for="944Suite">Suite</label>
-			<td><td><input type="text" class="form-control" id="944Suite" name="944Suite" >
+			<td><td><input type="text" class="form-control" id="944Suite" name="944Suite" readonly required <?php echo "value=".$emplrSuiteNum ?>>
 			</div></td>
 		</tr>
 		<td colspan="4">
 		<td>
 			<label for="944City">City</label>
-			<td><td><input type="text" class="form-control" id="944City" name="944City" >
+			<td><td><input type="text" class="form-control" id="944City" name="944City" readonly required  <?php echo 'value="' . $emplrCity . '" '?> >
 			</div></td>
 		</tr>
 		<tr>
 		<td colspan="4">
 		<td>
 			<label for="944State">State</label>
-			<td><td><input type="text" class="form-control" id="944State" name="944State" >
+			<td><td><input type="text" class="form-control" id="944State" name="944State" readonly required <?php echo "value=".$emplrState ?>>
 			</div></td>
 		</tr>
 		<tr>
 		<td colspan="4">
 		<td>
 			<label for="944Zip">Zip Code</label>
-			<td><td><input type="text" class="form-control" id="944Zip" name="944Zip" >
+			<td><td><input type="text" class="form-control" id="944Zip" name="944Zip" readonly required <?php echo "value=".$emplrZip ?>>
 			</div></td>
 		</tr>
 	</table>
@@ -85,11 +225,10 @@
 
 <table>
 <tr>
-		
 		<td colspan="4">
 		<td>
 			<label for="944Comp">1. Wages, tips, and other compensation </label>
-			<td><td><input type="text" class="form-control" id="944Comp" name="944Comp" >
+			<td><td><input type="text" class="form-control" id="944Comp" name="944Comp" readonly required <?php echo "value=".$Compensation ?>>
 			</div></td>
 		</tr>
 
@@ -98,7 +237,7 @@
 		<td colspan="4">
 		<td>
 			<label for="944FedTax">2. Federal income tax withheld from wages, tips, and other compensation </label>
-			<td><td><input type="text" class="form-control" id="944FedTax" name="944FedTax" >
+			<td><td><input type="text" class="form-control" id="944FedTax" name="944FedTax" readonly required <?php echo "value=".$FedWithold ?>>
 			</div></td>
 		</tr>
 		
@@ -118,51 +257,51 @@
 		<tr>
 		<td colspan="4">
 		<td>
-			<label for="944SSWage">4a. Taxable social security wages</label>
-			<td><td><input type="text" class="form-control" id="944SSWage" name="944SSWage" >
+			<label for="SSWages">4a. Taxable social security wages</label>
+			<td><td><input type="text" class="form-control" id="SSWages" name="SSWages" readonly required <?php echo "value=".$SSWages ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
-			<label for="wagesb">x 0.124 = </label>
-			<td><td><input type="text" class="form-control" id="wagesb" name="wages2" >
+			<label for="SSWagesTax">x 0.124 = </label>
+			<td><td><input type="text" class="form-control" id="SSWagesTax" name="SSWagesTax" readonly required <?php echo "value=".$SSWagesTax  ?>>
 			</div></td>
 </tr>	
 
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944SSTip">4b. Taxable social security tips</label>
-			<td><td><input type="text" class="form-control" id="944SSTip" name="944SSTip" >
+			<label for="SSTip">4b. Taxable social security tips</label>
+			<td><td><input type="text" class="form-control" id="SSTip" name="SSTip" readonly required <?php echo "value=".$SSTips ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
-			<label for="wagesc">x 0.124 = </label>
-			<td><td><input type="text" class="form-control" id="wagesc" name="wagesc" >
+			<label for="SSTipsTax">x 0.124 = </label>
+			<td><td><input type="text" class="form-control" id="SSTipsTax" name="SSTipsTax" readonly required <?php echo "value=".$SSTipsTax ?>>
 			</div></td>
 </tr>
 
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944MDCWage">4c. Taxable Medicare wages & tips</label>
-			<td><td><input type="text" class="form-control" id="944MDCWage" name="944MDCWage" >
+			<label for="MDCWages">4c. Taxable Medicare wages & tips</label>
+			<td><td><input type="text" class="form-control" id="MDCWages" name="MDCWages" readonly required <?php echo "value=".$MDCWages ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
-			<label for="wages2">x 0.029 = </label>
-			<td><td><input type="text" class="form-control" id="wagesd" name="wagesd" >
+			<label for="MDCWagesTax">x 0.029 = </label>
+			<td><td><input type="text" class="form-control" id="MDCWagesTax" name="MDCWagesTax" readonly required <?php echo "value=".$MDCWagesTax ?>>
 			</div></td>
 </tr>
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944MDCTip">4d. Taxable wages & tips subject to Additional Medicare Tax withholding</label>
-			<td><td><input type="text" class="form-control" id="944MDCTip" name="944MDCTip" >
+			<label for="MDCTip">4d. Taxable wages & tips subject to Additional Medicare Tax withholding</label>
+			<td><td><input type="text" class="form-control" id="MDCTip" name="MDCTip" >
 			</div></td>
 			<td colspan="5">
 			<td>
-			<label for="wagese">x 0.009 = </label>
-			<td><td><input type="text" class="form-control" id="wagese" name="wagese" >
+			<label for="MDCTipTax">x 0.009 = </label>
+			<td><td><input type="text" class="form-control" id="MDCTipTax" name="MDCTipTax" >
 			</div></td>
 </tr>
 </Table>
@@ -170,130 +309,131 @@
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944Add4abcd">4e. Add Column 2 from lines 4a, 4b, 4c, and 4d  </label>
-			<td><td><input type="text" class="form-control" id="944Add4abcd" name="944Add4abcd" >
-			</div></td>
-</tr>
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="944TotTax">5. Total taxes before adjustments. Add lines 2, 4e </label>
-			<td><td><input type="text" class="form-control" id="944TotTax" name="944TotTax" >
-			</div></td>
-</tr>
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="944CYAdj">6. Current years’s adjustment</label>
-			<td><td><input type="text" class="form-control" id="944CYAdj" name="944CYAdj" >
+			<label for="TotalTax">4e. Add Column 2 from lines 4a, 4b, 4c, and 4d  </label>
+			<td><td><input type="text" class="form-control" id="TotalTax" name="TotalTax" readonly required <?php echo "value=".$TotalTax ?>>
 			</div></td>
 </tr>
 
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944TotTaxAdj">7. Total taxes after adjustments. Add lines 5 and 6 </label>
-			<td><td><input type="text" class="form-control" id="944TotTaxAdj" name="944TotTaxAdj" >
+			<label for="TotalTaxBeforeAdj">5. Total taxes before adjustments. Add lines 2, 4e </label>
+			<td><td><input type="text" class="form-control" id="TotalTaxBeforeAdj" name="TotalTaxBeforeAdj" readonly required <?php echo "value=".$TotalTaxBeforeAdj ?>>
+			</div></td>
+</tr>  
+<tr>
+		<td colspan="4">
+		<td>
+			<label for="CYAdj">6. Current years’s adjustment</label>
+			<td><td><input type="text" class="form-control" id="CYAdj" name="CYAdj" readonly required <?php echo "value=".$CYAdj ?>>
 			</div></td>
 </tr>
 
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944SmlBus">8. Qualified small business payroll tax credit for increasing research activities.</label>
-			<td><td><input type="text" class="form-control" id="944SmlBus" name="944SmlBus" >
+			<label for="TotTaxAdj">7. Total taxes after adjustments. Add lines 5 and 6 </label>
+			<td><td><input type="text" class="form-control" id="TotTaxAdj" name="TotTaxAdj" readonly required <?php echo "value=".$TotTaxAdj ?>>
 			</div></td>
 </tr>
 
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944ToTaxAdjb">9. Total taxes after adjustments and credits. Subtract line 8 from line 7   </label>
-			<td><td><input type="text" class="form-control" id="944ToTaxAdjb" name="944ToTaxAdjb" >
+			<label for="SmlBusCred">8. Qualified small business payroll tax credit for increasing research activities.</label>
+			<td><td><input type="text" class="form-control" id="SmlBusCred" name="SmlBusCred" readonly required <?php echo "value=".$SmlBusCred ?>>
 			</div></td>
 </tr>
 
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944epY">10. Total deposits for this year, including overpayment applied from a prior year</label>
-			<td><td><input type="text" class="form-control" id="944epY" name="944epY" >
+			<label for="ToTaxAdjb">9. Total taxes after adjustments and credits. Subtract line 8 from line 7   </label>
+			<td><td><input type="text" class="form-control" id="ToTaxAdjb" name="ToTaxAdjb" readonly required <?php echo "value=".$ToTaxAdjb ?>>
 			</div></td>
 </tr>
 
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944Bal">11. Balance due. If line 9 is more than line 10, enter the difference</label>
-			<td><td><input type="text" class="form-control" id="944Bal" name="944Bal" >
+			<label for="YrlyDep">10. Total deposits for this year, including overpayment applied from a prior year</label>
+			<td><td><input type="text" class="form-control" id="YrlyDep" name="YrlyDep" >
 			</div></td>
 </tr>
-</table>
-<table>
+
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944OvrPay">12. Overpayment. If line 10 is more than line 9</label>
-			<td><td><input type="text" class="form-control" id="944OvrPay" name="944OvrPay" >
+			<label for="BalDue">11. Balance due. If line 9 is more than line 10, enter the difference</label>
+			<td><td><input type="text" class="form-control" id="BalDue" name="BalDue" >
+			</div></td>
+</tr>
+
+<tr>
+		<td colspan="4">
+		<td>
+			<label for="OvrPay">12. Overpayment. If line 10 is more than line 9</label>
+			<td><td><input type="text" class="form-control" id="OvrPay" name="OvrPay" >
 			</div></td>
 		</br></br></br>
 		</div>
-		<td colspan="10">
-		<td><div>(Check one)</div></td>
-		</tr>
-			<td colspan="25">
-		<td><div><td><input type="radio" id="944Apply to next return" name="Apply to next return" value= "944Apply to next return">
-			<label for="944Apply to next return">Apply to next return</label></td>
-			
-			<td colspan="25">
-		<td><div><td><input type="radio" id="944Send to refund" name="944Send to refund" value= "944Send to refund">
-			<label for="944Send to refund">Send to refund</label></td>
-		</tr>	
-</tr>
 </table>
+<br><br>
 
-
-<tr>
-		<td colspan="4">
-		Check one:
-		<td>
 		<table>
-	    <div class="form-group col-md-3">
-		<td colspan="150"><div><input type="radio" id="944opt1" name="944opt1" value= "944opt1">
-			<label for="944opt1">Line 9 is less than $2500.Go to Part 3</label></td>
+<label for="944opt">Choose one</label>&nbsp;
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="944opt">
+                        <label class="btn btn-secondary active">
+                          <input type="radio" name="options" id="944opt1" name="944opt1" autocomplete="off" checked> Apply to next return
+                        </label>
+                        <label class="btn btn-secondary">
+                          <input type="radio" name="options" id="944opt2" name="944opt2"  autocomplete="off"> Send to refund
+                      </div>
+                </div>
 </table>
-<br>
-<table>
-		<td colspan="4">
-		<td>
-			<td><div><input type="radio" id="944opt2" name="944opt2" value= "944opt2">
-			<label for="944opt2">Line 9 is $2,500 or more. Enter your tax liability for each month.
-			If you’re a semiweekly depositor or you became one <br> because you accumulated $100,000 or more of liability
-			on any day during a deposit period, you must complete Form 945-A instead of the boxes below</label></td>
+<br><br><br>
+
+
+<tr>		
+		<table>
+<label for="944opt">Choose One</label>&nbsp;
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="944opt">
+                        <label class="btn btn-secondary active">
+                          <input type="radio" name="options" id="944opt1" name="944opt1" autocomplete="off" checked> Line 9 is less than $2500.Go to Part 3
+                        </label>
+                        <label class="btn btn-secondary">
+                          <input type="radio" name="options" id="944opt2" name="944opt2"  autocomplete="off"> 
+			Line 9 is $2,500 or more. Enter your tax liability for each month. 
+			<br>If you’re a semiweekly depositor or you became one because you 
+			<br>accumulated $100,000 or more of liability on any day during a deposit period,
+			<br>you must complete Form 945-A instead of the boxes below
+                        </label>
+                      </div>
+                </div>
+</table>
 </tr>
-</table>
 <br><br>
 <table>
 	<tr>
 		<td colspan="4">
 		<td>
-			<label for="944Jan">13a. Jan.</label>
-			<td><td><input type="text" class="form-control" id="944Jan" name="944Jan" >
+			<label for="Jan">13a. Jan.</label>
+			<td><td><input type="text" class="form-control" id="Jan" name="Jan" readonly required <?php echo "value=".$jan ?>>
 			</div></td>
 		<td colspan="4">
 		<td>
-			<label for="944Apr">13d. Apr.</label>
-			<td><td><input type="text" class="form-control" id="944Apr" name="944Apr" >
+			<label for="Apr">13d. Apr.</label>
+			<td><td><input type="text" class="form-control" id="Apr" name="Apr" readonly required <?php echo "value=".$april ?>>
 			</div></td>
 		<td colspan="4">
 		<td>
-			<label for="944July">13g. July.</label>
-			<td><td><input type="text" class="form-control" id="944July" name="944July" >
+			<label for="July">13g. July.</label>
+			<td><td><input type="text" class="form-control" id="July" name="July" readonly required <?php echo "value=".$july ?>>
 			</div></td>
 			<td colspan="4">
 		<td>
-			<label for="944Oct">13j. Oct.</label>
-			<td><td><input type="text" class="form-control" id="944Oct" name="944Oct" >
+			<label for="Oct">13j. Oct.</label>
+			<td><td><input type="text" class="form-control" id="Oct" name="Oct" readonly required <?php echo "value=".$oct ?>>
 			</div></td>
 	</tr>
 		
@@ -302,23 +442,23 @@
 	<tr>
 		<td colspan="4">
 		<td>
-			<label for="944Feb">13b. Feb.</label>
-			<td><td><input type="text" class="form-control" id="944Feb" name="944Feb" >
+			<label for="Feb">13b. Feb.</label>
+			<td><td><input type="text" class="form-control" id="Feb" name="Feb" readonly required <?php echo "value=".$feb ?>>
 			</div></td>
 		<td colspan="4">
 		<td>
-			<label for="944May">13e. May.</label>
-			<td><td><input type="text" class="form-control" id="944May" name="944May" >
+			<label for="May">13e. May.</label>
+			<td><td><input type="text" class="form-control" id="May" name="May" readonly required <?php echo "value=".$may ?>>
 			</div></td>
 		<td colspan="4">
 		<td>
-			<label for="944Aug">13h. Aug.</label>
-			<td><td><input type="text" class="form-control" id="944Aug" name="944Aug" >
+			<label for="Aug">13h. Aug.</label>
+			<td><td><input type="text" class="form-control" id="Aug" name="Aug" readonly required <?php echo "value=".$aug ?>>
 			</div></td>
 			<td colspan="4">
 		<td>
-			<label for="944Nov">13k. Nov.</label>
-			<td><td><input type="text" class="form-control" id="944Nov" name="944Nov" >
+			<label for="Nov">13k. Nov.</label>
+			<td><td><input type="text" class="form-control" id="Nov" name="Nov" readonly required <?php echo "value=".$nov ?>>
 			</div></td>
 	</tr>
 		
@@ -327,23 +467,23 @@
 	<tr>
 		<td colspan="4">
 		<td>
-			<label for="944Mar">13c. Mar.</label>
-			<td><td><input type="text" class="form-control" id="944Mar" name="944Mar" >
+			<label for="Mar">13c. Mar.</label>
+			<td><td><input type="text" class="form-control" id="Mar" name="Mar" readonly required <?php echo "value=".$march ?>>
 			</div></td>
 		<td colspan="4">
 		<td>
-			<label for="944June">13f. June.</label>
-			<td><td><input type="text" class="form-control" id="944June" name="944June" >
+			<label for="June">13f. June.</label>
+			<td><td><input type="text" class="form-control" id="June" name="June" readonly required <?php echo "value=".$june ?> >
 			</div></td>
 		<td colspan="4">
 		<td>
-			<label for="944Sept">13i. Sep.</label>
-			<td><td><input type="text" class="form-control" id="944Sept" name="944Sept" >
+			<label for="Sept">13i. Sep.</label>
+			<td><td><input type="text" class="form-control" id="Sept" name="Sept" readonly required <?php echo "value=".$sept ?>>
 			</div></td>
 			<td colspan="4">
 		<td>
-			<label for="944Dec">13l. Dec.</label>
-			<td><td><input type="text" class="form-control" id="944Dec" name="944Dec" >
+			<label for="Dec">13l. Dec.</label>
+			<td><td><input type="text" class="form-control" id="Dec" name="Dec" readonly required <?php echo "value=".$dec ?>>
 			</div></td>
 	</tr>
 		
@@ -352,44 +492,30 @@
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944TotLiabY">Total liability for year. Add lines 13a through 13l. Total must equal line 9</label>
-			<td><td><input type="text" class="form-control" id="944TotLiabY" name="944TotLiabY" >
+			<label for="TotLiabY">Total liability for year. Add lines 13a through 13l. Total must equal line 9</label>
+			<td><td><input type="text" class="form-control" id="TotLiabY" name="TotLiabY" >
 			</div></td>
 </tr>
 <br><br>
 
 
-
-
+<table>
+<label for="944BusClosed">14. Has your company Closed within the year</label>&nbsp;
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="944BusClosed">
+                        <label class="btn btn-secondary active">
+                          <input type="radio" name="options" id="944Yes" name="944Yes" autocomplete="off" checked> Yes
+                        </label>
+                        <label class="btn btn-secondary">
+                          <input type="radio" name="options" id="944No" name="944No"  autocomplete="off"> No
+                        </label>
+                      </div>
+                </div>
+</table>
 <table>
 		<td colspan="4">
-		<td>
-			<td><div><input type="radio" id="944close" name="944close" value= "944close">
-			<label for="944close">14. If your business has closed or you stopped paying wages </label></td>
-			<td colspan="14">
-		<td>
-			<label for="944DateWage">Enter the final date you paid wages </label>
+			<label for="944DateWage">If your business has closed or you stopped paying wages. Enter the final date you paid wages </label>
 			<td><td><input type="text" class="form-control" id="944DateWage" name="944DateWage" >
 			</div></td>
-</table>
-<br><br>
-<table>
-		<td colspan="4">
-		<td>
-			<td><div><input type="radio" id="944Designee" name="944Designee" value= "944Designee">
-			<label for="944Designee">Yes. Designee’s name and phone number </label></td>
-			<td colspan="75">
-		<td>
-			<label for="944PIN">5 digit PIN</label>
-			<td><td><input type="text" class="form-control" id="944PIN" name="944PIN" >
-			</div></td>
-</table>
-<table>
-		<td colspan="4">
-		<td>
-			<td><div><input type="radio" id="944No" name="944No" value= "944No">
-			<label for="941No">No. </label></td>
-		
 </table>
 <br><br>
 <table>
@@ -398,21 +524,14 @@
 		<td colspan="4">
 		<td>
 			<label for="944name">Name</label>
-			<td><td><input type="text" class="form-control" id="944name" name="944name" >
+			<td><td><input type="text" class="form-control" id="944name" name="944name" disabled <?php echo 'value="'.$employeeName. '" '?> >
 			</div></td>
 </tr>
 <tr>
 		<td colspan="4">
 		<td>
 			<label for="944title">Title</label>
-			<td><td><input type="text" class="form-control" id="944title" name="944title" >
-			</div></td>
-</tr>
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="944phone">Phone</label>
-			<td><td><input type="text" class="form-control" id="944phone" name="944phone" >
+			<td><td><input type="text" class="form-control" id="944title" name="944title" readonly required <?php echo "value=".$Title ?>> 
 			</div></td>
 </tr>
 <tr>
@@ -426,14 +545,14 @@
 		<td colspan="4">
 		<td>
 			<label for="944date">Date</label>
-			<td><td><input type="text" class="form-control" id="944date" name="944date" >
+			<td><td><input type="text" class="form-control" id="944date" name="944date" readonly required <?php echo "value=".date("Y/m/d"); ?> >
 			</div></td>
 </tr>
 <tr>
 		<td colspan="4">
 		<td>
 			<label for="944PTIN">PTIN</label>
-			<td><td><input type="text" class="form-control" id="944PTIN" name="944PTIN" >
+			<td><td><input type="text" class="form-control" id="944PTIN" name="944PTIN" readonly required <?php echo "value=".$PTIN ?> >
 			</div></td>
 </tr>
 
@@ -441,7 +560,7 @@
 		<td colspan="4">
 		<td>
 			<label for="944EIN">EIN</label>
-			<td><td><input type="text" class="form-control" id="944EIN" name="944EIN" >
+			<td><td><input type="text" class="form-control" id="944EIN" name="944EIN" readonly required <?php echo "value=".$EIN ?>>
 			</div></td>
 </tr>
 
@@ -449,49 +568,15 @@
 		<td colspan="4">
 		<td>
 			<label for="944Address">Address</label>
-			<td><td><input type="text" class="form-control" id="944Address" name="944Address" >
+			<td><td><input type="text" class="form-control" id="944Address" name="944Address" disabled <?php echo 'value="' . $employerAddress1 . '" '?> >
 </tr>	
 			
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944Number">Number</label>
-			<TD><td><input type="text" class="form-control" id="944Number" name="944Number" >
+			<label for="944Address">Address</label>
+			<TD><td><input type="text" class="form-control" id="944Address" name="944Address" disabled <?php echo 'value="' . $employerAddress2 . '" '?> >
 
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="944Street">Street</label>
-			<TD><td><input type="text" class="form-control" id="944Street" name="944Street" >
-
-</tr>
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="944Suite">Suite</label>
-			<td><td><input type="text" class="form-control" id="944Suite" name="944Suite" >
-			</div></td>
-</tr>
-		<td colspan="4">
-		<td>
-			<label for="944City">City</label>
-			<td><td><input type="text" class="form-control" id="944City" name="944City" >
-			</div></td>
-</tr>
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="944State">State</label>
-			<td><td><input type="text" class="form-control" id="944State" name="944State" >
-			</div></td>
-</tr>
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="944Zip">Zip Code</label>
-			<td><td><input type="text" class="form-control" id="944Zip" name="944Zip" >
-			</div></td>
-</tr>
 
 </table>
 
@@ -501,15 +586,15 @@
 
 <br><br>
 <table>
-<td colspan="150">
-<div><H5><left>944-V <br></left></h5></div>
-<H6><left>Department of the Treasury</left></h6>
-<H6><left>Internal Revenue Service</left></h6>
-<td colspan="150">
-<H3><center>Payment Voucher <br></center></h3></div>
-<td colspan="150">
-<H5><right>OMB No. 1545-0029 <br></right></h5></div>
-<H3><right>2020</right></h3>
+	<td colspan="150">
+	<div><H5><left>944-V <br></left></h5></div>
+		<H6><left>Department of the Treasury</left></h6>
+		<H6><left>Internal Revenue Service</left></h6></td>
+	<td colspan="150">
+		<div><H3><center>Payment Voucher <br></center></h3></div></td>
+	<td colspan="150">
+		<div><H5><right>OMB No. 1545-0029 <br></right></h5></div>
+		<H3><right>2020</right></h3></td>
 
 </table>
 
@@ -518,37 +603,41 @@
 		<td colspan="4">
 		<td>
 			<label for="944EIN">Employee Identification Number (EIN)</label>
-			<td><td><input type="text" class="form-control" id="944EIN" name="944EIN" >
+			<td><td><input type="text" class="form-control" id="944EIN" name="944EIN" readonly required <?php echo "value=".$EIN ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
 			<label for="944Payment">Payment </label>
 			<td><td><input type="text" class="form-control" id="944Payment" name="944Payment" >
 			</div></td><br>
-			<tr>
+</tr>
 		<td colspan="4">
 		<td>
 			<label for="944Period">Tax Period</label>
-			<td><td><input type="text" class="form-control" id="944Period" name="944Period" >
+			<td><td><input type="text" class="form-control" id="944Period" name="944Period"  readonly required <?php echo "value=".date("Y"); ?> >
 			</div></td>
 			<td colspan="5">
 			<td>
 			<label for="944Business">Business Name </label>
-			<td><td><input type="text" class="form-control" id="944Business" name="944Business" >
+			<td><td><input type="text" class="form-control" id="944Business" name="944Business" disabled <?php echo 'value="' . $emplrName . '" '?>  >
 			</div></td>
-<table>
+</table>
 <table>	
 	
 		<td colspan="219">
 		<td>
 			<label for="944BusinessAdd1">Business Addr1 </label>
-			<td><td><input type="text" class="form-control" id="944BusinessAdd1" name="944BusinessAdd1" >
+			<td><td><input type="text" class="form-control" id="944BusinessAdd1" name="944BusinessAdd1" disabled <?php echo 'value="' . $employerAddress1 . '" '?> >
 			</div></td>
 </table>
 <table>		
 		<td colspan="219">
 		<td>
 			<label for="944Business2">Business Addr2 </label>
-			<td><td><input type="text" class="form-control" id="944Business2" name="944Business2" >
+			<td><td><input type="text" class="form-control" id="944Business2" name="944Business2" disabled <?php echo 'value="' . $employerAddress2 . '" '?> >
 			</div></td>
 </table>
+<br><br>  
+
+  </body>
+</html>
