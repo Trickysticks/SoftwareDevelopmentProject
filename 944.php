@@ -1,7 +1,8 @@
 <?php 
+//Author: Christine Wasserman
 include("navbar.php");
 include("config.php");
-//Author: Christine Wasserman
+
 $currentId = $_SESSION["id"];
 
 $deptId = $middleInitial = $streetName = $aptNum = $city = $state = $zip = $streetNum =$firstName= $lastName = $SSN = $salary=  "";
@@ -48,72 +49,93 @@ if (isset($row['CloseDate']))
 $employerAddress1 = $emplrStNum . " " . $emplrStAdd . " " . $emplrSuiteNum;
 $employerAddress2 =$emplrCity . ", " . $emplrState . " " . $emplrZip;
 
-//pulling all info from W2 table-- this will continuously be populated with new data as employees add their W4 information
-$W2Info = $link->query("SELECT * FROM W2");
-$row = $W2Info->fetch_assoc();
-if (isset($row['Compensation']))
-  $Compensation = $row['Compensation'];
-if (isset($row['SSWages']))
-  $SSWages = $row['SSWages'];
-if (isset($row['MDCWages']))
-  $MDCWages = $row['MDCWages'];
-if (isset($row['SSTips']))
-  $SSTips = $row['SSTips'];
-if (isset($row['FedWithold']))
-  $FedWithold = $row['FedWithold'];
-if (isset($row['SSTaxWithold']))
-  $SSTaxWithold = $row['SSTaxWithold'];
-if (isset($row['MDCTaxWithold']))
-  $MDCTaxWithold = $row['MDCTaxWithold'];
-if (isset($row['Tips']))
-  $Tips = $row['Tips'];
-if (isset($row['DependentCareBen']))
-  $DependentCareBen = $row['DependentCareBen'];
+//getting total compensation of all W2s
+$CompensationQuery = $link->query("Select Sum(Compensation+SSWages+MDCWages+SSTips) as TotalCompensation from w2");
+$row=$CompensationQuery->fetch_assoc();
+$Compensation = $row['TotalCompensation'];
 
-//pulling all data from payroll table 
-$PayrollInfo = $link->query("SELECT * FROM Payroll");
-$row = $PayrollInfo->fetch_assoc();
-if (isset($row['BiWeekSalary']))
-  $BiWeekSalary = $row['BiWeekSalary'];
-if (isset($row['Deductions']))
-  $Deductions = $row['Deductions'];
-if (isset($row['Medical']))
-  $Medical = $row['Medical'];
-if (isset($row['Dental']))
-  $Dental = $row['Dental'];
-if (isset($row['Vision']))
-  $Vision = $row['Vision'];
-if (isset($row['MDCTax']))
-  $MDCTax = $row['MDCTax'];
-if (isset($row['SSTax']))
-  $SSTax = $row['SSTax'];
-if (isset($row['FEDTax']))
-  $FEDTax = $row['FEDTax'];
-if (isset($row['STATETax']))
-  $STATETax = $row['STATETax'];
-if (isset($row['PAyrollMonth']))
-  $PAyrollMonth = $row['PAyrollMonth'];
+//getting total federal witholdings of all W2s
+$FedWitholdQuery = $link->query("Select Sum(FedWithold) as TotalFedWithhold from w2");
+$row=$FedWitholdQuery->fetch_assoc();
+$FedWithold = $row['TotalFedWithhold'];
 
+// 3. If no wages, tips, and other compensation are subject to social security or Medicare tax 
+$NoComp = 0; //place holder not sure what this is
 
+//getting total Social Security Wages of all W2s
+$SSWagesQuery = $link->query("Select Sum(SSWages) as TotalSSWages from w2");
+$row=$SSWagesQuery->fetch_assoc();
+$SSWages = $row['TotalSSWages'];
 
-
-//---- Possbile Controller ???? 
-
-//Calculating total columns for compensation, SS wages, SS tips and MDC wages
-//$compensationTotal = mysqli_query(link,"SELECT SUM(compensation+SSWages+MDCWages+SSTips) as comp_sum FROM w2");
-//$row = mysqli_fetch_array($compensationTotal);
-//$sum = $row['comp_sum'];
-
+//Calculating the total Social Security Tax from the Total Social Security Wages for all W2s
 $SSWagesTax = number_format($SSWages * .124,2);
+
+//getting total Social Security Tips of all W2s
+$SSTipsQuery = $link->query("Select Sum(SSTips) as TotalSSTips from w2");
+$row=$SSTipsQuery->fetch_assoc();
+$SSTips = $row['TotalSSTips'];
+
+//Calculating the total Social Security Tips from the Total Social Security Wages for all W2s
 $SSTipsTax = number_format($SSTips * .0124,2);
+
+//getting total Medicare Wages of all W2s
+$MDCWagesQuery = $link->query("Select Sum(MDCWages) as TotalMDCWages from w2");
+$row=$MDCWagesQuery->fetch_assoc();
+$MDCWages = $row['TotalMDCWages'];
+
+//Calculating the total Medicare Wages from the Total Social Security Wages for all W2s
 $MDCWagesTax = number_format($MDCWages * .029,2);
 
+//Getting total additiona Medicare wages of all W2s
+//$AddMDCWagesQuery = $link->query("Select Sum(MDCWages) as TotalMDCWages from w2");
+//$row=$AddMDCWagesQuery->fetch_assoc();
+//$AddMDCWages = $row['AddMDCWages'];
+$AddMDCWages = 0; //placeholder not on tax rate sheet.
+
+
+//Calculating the additional Medicare Wages from the Total additional Medicare Wages for all W2s
+$AddMDCTax= $AddMDCWages * 0.009;
+
+// 4e. Add Column 2 from lines 4a, 4b, 4c, and 4d   
 $TotalTax= $SSWagesTax+ $SSTipsTax+ $MDCWagesTax;
+
+
+// 5. Total taxes before adjustments. Add lines 2, 4e  e
 $TotalTaxBeforeAdj= $FedWithold +$TotalTax;
-$CYAdj = 0; //0 is a place holder for $CYAdj
-$TotTaxAdj= $TotalTaxBeforeAdj + 0; //0 is a place holder for $CYAdj-not sure what current year adjustment should be total of
+
+
+// 6. Current years’s adjustment 
+$CYAdj = 0; //0 is a place holder for $CYAdj (current year adjustment); nothing on tax table about this..?
+
+
+ //7. Total taxes after adjustments. Add lines 5 and 6   
+$TotTaxAdj= $TotalTaxBeforeAdj + 0; //0 is a place holder for $CYAdj 
+
+
+// 8. Qualified small business payroll tax credit for increasing research activities. .
 $SmlBusCred = 0; //0 is a place holder for $SmlBusCred
+
+
+// 9. Total taxes after adjustments and credits. Subtract line 8 from line 7   
 $ToTaxAdjb = $TotTaxAdj- $SmlBusCred;
+
+
+//10. Total deposits for this year, including overpayment applied from a prior year ; not sure what the deposits are?
+ $YrlyDep = 0; //0 is a place holder for $YrlyDep
+ 
+ 
+// 11. Balance due. If line 9 is more than line 10, enter the difference 
+//$BalDueQuery = $link->query("CASE when $YrlyDep > $ToTaxAdjb then (select $ToTaxAdjb - $YrlyDep from 944 ) else  '0' end as BalDue)  ");
+//$row=$BalDueQuery->fetch_assoc();
+//$BalDue = $row['BalDue'];
+$BalDue = $ToTaxAdjb - $YrlyDep ;
+
+
+ // 12. Overpayment. If line 10 is more than line 9 
+//$OvrPayQuery = $link->query" CASE when YrlyDep > ToTaxAdjb then (select YrlyDep - ToTaxAdjb from 944 ) else  '0' end as OvrPay)  ");
+//$row=$OvrPayQuery->fetch_assoc();
+//$OvrPay = $row['OvrPay'];
+$OvrPay = 0;
 
 //To populate monthly deposit schedule and tax liability secontion 13.a-l
 //$DepositSchedule =  mysqli_query("Select sum(MDCTax+SSTax+FEDTax+STATETax) as dep_Sched from payroll group by payrollMonth");
@@ -133,15 +155,11 @@ $oct = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payrol
 $nov = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'nov'");
 $dec = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'dec'");
 
-$numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Employee group by empid");
 
-
-
-
-
-//---- END Possible Controller ???
-
-
+//Total liability for year. Add lines 13a through 13l. Total must equal line 9 
+$TotLiabYQuery = $link->query("Select sum(MDCTax+SSTax+FEDTax+STATETax) as sumTotLiabY from payroll group by empid ");
+$row=$TotLiabYQuery->fetch_assoc();
+$TotLiabY = $row['TotLiabY'];
 
 
 ?>
@@ -160,7 +178,7 @@ $numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Em
   </head>
   <body>
 <div><H1><center>944 Form </center></h1></div></br>
-  
+  <form method="POST" action="944controller.php">
 <table>
 	<tr>
 		<td colspan="4">
@@ -247,7 +265,7 @@ $numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Em
 		<td colspan="4">
 		<td>
 			<label for="944NoComp">3. If no wages, tips, and other compensation are subject to social security or Medicare tax </label>
-			<td><td><input type="text" class="form-control" id="944NoComp" name="944NoComp" >
+			<td><td><input type="text" class="form-control" id="944NoComp" name="944NoComp" readonly required <?php echo "value=".$NoComp ?>>
 			</div></td>
 		</tr>
 		
@@ -296,15 +314,15 @@ $numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Em
 		<td colspan="4">
 		<td>
 			<label for="MDCTip">4d. Taxable wages & tips subject to Additional Medicare Tax withholding</label>
-			<td><td><input type="text" class="form-control" id="MDCTip" name="MDCTip" >
+			<td><td><input type="text" class="form-control" id="MDCTip" name="MDCTip" readonly required <?php echo "value=".$AddMDCWages ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
 			<label for="MDCTipTax">x 0.009 = </label>
-			<td><td><input type="text" class="form-control" id="MDCTipTax" name="MDCTipTax" >
+			<td><td><input type="text" class="form-control" id="MDCTipTax" name="MDCTipTax" readonly required <?php echo "value=".$AddMDCTax ?>>
 			</div></td>
 </tr>
-</Table>
+</table>
 <table>
 <tr>
 		<td colspan="4">
@@ -357,7 +375,7 @@ $numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Em
 		<td colspan="4">
 		<td>
 			<label for="YrlyDep">10. Total deposits for this year, including overpayment applied from a prior year</label>
-			<td><td><input type="text" class="form-control" id="YrlyDep" name="YrlyDep" >
+			<td><td><input type="text" class="form-control" id="YrlyDep" name="YrlyDep" readonly required <?php echo "value=".$YrlyDep ?>>
 			</div></td>
 </tr>
 
@@ -365,7 +383,7 @@ $numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Em
 		<td colspan="4">
 		<td>
 			<label for="BalDue">11. Balance due. If line 9 is more than line 10, enter the difference</label>
-			<td><td><input type="text" class="form-control" id="BalDue" name="BalDue" >
+			<td><td><input type="text" class="form-control" id="BalDue" name="BalDue" readonly required <?php echo "value=".$BalDue ?>>
 			</div></td>
 </tr>
 
@@ -373,7 +391,7 @@ $numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Em
 		<td colspan="4">
 		<td>
 			<label for="OvrPay">12. Overpayment. If line 10 is more than line 9</label>
-			<td><td><input type="text" class="form-control" id="OvrPay" name="OvrPay" >
+			<td><td><input type="text" class="form-control" id="OvrPay" name="OvrPay" readonly required <?php echo "value=".$OvrPay ?>>
 			</div></td>
 		</br></br></br>
 		</div>
@@ -493,7 +511,7 @@ $numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Em
 		<td colspan="4">
 		<td>
 			<label for="TotLiabY">Total liability for year. Add lines 13a through 13l. Total must equal line 9</label>
-			<td><td><input type="text" class="form-control" id="TotLiabY" name="TotLiabY" >
+			<td><td><input type="text" class="form-control" id="TotLiabY" name="TotLiabY" readonly required <?php echo "value=".$TotLiabY ?>>
 			</div></td>
 </tr>
 <br><br>
@@ -513,8 +531,8 @@ $numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Em
 </table>
 <table>
 		<td colspan="4">
-			<label for="944DateWage">If your business has closed or you stopped paying wages. Enter the final date you paid wages </label>
-			<td><td><input type="text" class="form-control" id="944DateWage" name="944DateWage" >
+			<label for="DateEnd">If your business has closed or you stopped paying wages. Enter the final date you paid wages (YYYY/MM/DD) </label>
+			<td><td><input type="text" class="form-control" id="DateEnd" name="DateEnd" >
 			</div></td>
 </table>
 <br><br>
@@ -532,13 +550,6 @@ $numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Em
 		<td>
 			<label for="944title">Title</label>
 			<td><td><input type="text" class="form-control" id="944title" name="944title" readonly required <?php echo "value=".$Title ?>> 
-			</div></td>
-</tr>
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="944signature">Electonic signature</label>
-			<td><td><input type="text" class="form-control" id="944signature" name="944signature" >
 			</div></td>
 </tr>
 <tr>
@@ -602,7 +613,7 @@ $numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Em
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944EIN">Employee Identification Number (EIN)</label>
+			<label for="944EIN">(EIN)</label>
 			<td><td><input type="text" class="form-control" id="944EIN" name="944EIN" readonly required <?php echo "value=".$EIN ?>>
 			</div></td>
 			<td colspan="5">
@@ -616,9 +627,12 @@ $numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Em
 			<label for="944Period">Tax Period</label>
 			<td><td><input type="text" class="form-control" id="944Period" name="944Period"  readonly required <?php echo "value=".date("Y"); ?> >
 			</div></td>
-			<td colspan="5">
+</table>
+<table>	
+	
+		<td colspan="5">
 			<td>
-			<label for="944Business">Business Name </label>
+			<label for="944Business">Bus Name </label>
 			<td><td><input type="text" class="form-control" id="944Business" name="944Business" disabled <?php echo 'value="' . $emplrName . '" '?>  >
 			</div></td>
 </table>
@@ -626,18 +640,20 @@ $numEmployees = mysqli_query($link, "Select count(EMPID) as numEmployees from Em
 	
 		<td colspan="219">
 		<td>
-			<label for="944BusinessAdd1">Business Addr1 </label>
+			<label for="944BusinessAdd1">Bus Addr1 </label>
 			<td><td><input type="text" class="form-control" id="944BusinessAdd1" name="944BusinessAdd1" disabled <?php echo 'value="' . $employerAddress1 . '" '?> >
 			</div></td>
 </table>
 <table>		
 		<td colspan="219">
 		<td>
-			<label for="944Business2">Business Addr2 </label>
+			<label for="944Business2">Bus Addr2 </label>
 			<td><td><input type="text" class="form-control" id="944Business2" name="944Business2" disabled <?php echo 'value="' . $employerAddress2 . '" '?> >
 			</div></td>
 </table>
-<br><br>  
-
+<br><br> 
+<button style = "margin: 0 auto; display: block;" type="submit" class="btn btn-dark">Submit</button>
+  </form>
+  <br> 
   </body>
 </html>
