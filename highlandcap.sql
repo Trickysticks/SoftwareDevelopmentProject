@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Mar 30, 2020 at 06:26 PM
+-- Generation Time: Mar 30, 2020 at 07:45 PM
 -- Server version: 5.7.26
 -- PHP Version: 7.2.18
 
@@ -428,7 +428,7 @@ CREATE TABLE IF NOT EXISTS `form944` (
   `SickPay` decimal(18,2) DEFAULT NULL,
   `LifeIns` decimal(18,2) DEFAULT NULL,
   `PrevAppliedOvrPy` decimal(18,2) DEFAULT NULL,
-  `BalDue` decimal(10,0) NOT NULL,
+  `BalDue` decimal(10,0) DEFAULT NULL,
   `ResearchActivities` varchar(100) DEFAULT NULL,
   `EMPID` varchar(10) DEFAULT NULL,
   `CompEndDate` date DEFAULT NULL,
