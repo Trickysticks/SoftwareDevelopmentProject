@@ -7,12 +7,12 @@ include("config.php");
 
 $EIN = $NumEmployees = $Compensation = $FedWithold = $SSWagesTax = $MDCWagesTax = $EMPID = $DateEnd = "";
 
-if (isset($_POST['TotalCompensation'])){
-    $Compensation = $_POST['TotalCompensation'];
+if (isset($_GET['TotalCompensation'])){
+    $Compensation = $_GET['TotalCompensation'];
 }
 
-if (isset($_POST['TotalFedWithhold'])){
-    $FedWithold = $_POST['TotalFedWithhold'];
+if (isset($_GET['TotalFedWithhold'])){
+    $FedWithold = $_GET['TotalFedWithhold'];
 }
 
 if (isset($_POST['TotalSSWages'])){
@@ -52,6 +52,9 @@ $NumEmployees = $_POST['NumEmployees'];
 if (isset($_POST['DateEnd'])){
   $DateEnd = $_POST['DateEnd'];
 }
+else{
+    $DateEnd=false;
+}
 
 $EINQuery = $link->query("Select EIN from W2");
 $row=$EINQuery->fetch_assoc();
@@ -62,17 +65,47 @@ $row=$EMPIDQuery->fetch_assoc();
 $EMPID = $row['EMPID'];
    
 
+echo "EIN:".$EIN."\n";
+echo "<br>";
+echo "NumEmployees:".$NumEmployees."\n";
+echo "<br>";
+echo "Compensation:".$Compensation."\n";
+echo "<br>";
+echo "FedWithold:".$FedWithold."\n";
+echo "<br>";
+echo "SSWagesTax:".$SSWagesTax."\n";
+echo "<br>";
+echo "MDCWagesTax:".$MDCWagesTax."\n";
+echo "<br>";
+echo "EMPID:".$EMPID."\n";
+echo "<br>";
+echo "DateEnd:".$DateEnd."\n";
+echo "<br>";
+
 $checkFor944 = $link->query("SELECT * FROM form944 WHERE EIN=$EIN");
-if (!$checkFor944 || mysqli_num_rows($checkFor944)==0) { //exluded PrevAppliedOvrPy, BalDue; not sure how to calculate these; see above
-  $sql = "INSERT INTO form944 (EIN ,NumEmployees ,Compensation ,FedTax ,SSTax ,MedicareTax, EMPID, DateEnd) 
-    VALUES ($EIN ,$NumEmployees ,$Compensation ,$FedWithold ,$SSWagesTax ,$MDCWagesTax, $EMPID, $DateEnd)";}
+
+if (!$DateEnd){ // dateEnd is null
+    if (!$checkFor944 || mysqli_num_rows($checkFor944)==0) { //exluded PrevAppliedOvrPy, BalDue; not sure how to calculate these; see above
+        $sql = "INSERT INTO form944 (EIN ,NumEmployees ,Compensation ,FedTax ,SSTax ,MedicareTax, EMPID) VALUES ($EIN ,$NumEmployees ,$Compensation ,$FedWithold ,$SSWagesTax ,$MDCWagesTax, '$EMPID')";}
+    else{
+        $link->query("DELETE FROM form944 WHERE EIN=$EIN");
+        $sql = "INSERT INTO form944 (EIN ,NumEmployees ,Compensation ,FedTax ,SSTax ,MedicareTax, EMPID) 
+        VALUES ($EIN ,$NumEmployees ,$Compensation ,$FedWithold ,$SSWagesTax ,$MDCWagesTax, '$EMPID')";}
+}
 else{
-  $link->query("DELETE FROM form944 WHERE EIN=$EIN");
-  $sql = "INSERT INTO form944 (EIN ,NumEmployees ,Compensation ,FedTax ,SSTax ,MedicareTax, EMPID, DateEnd) 
-    VALUES ($EIN ,$NumEmployees ,$Compensation ,$FedWithold ,$SSWagesTax ,$MDCWagesTax, $EMPID, $DateEnd)";}
-	
+    if (!$checkFor944 || mysqli_num_rows($checkFor944)==0) { //exluded PrevAppliedOvrPy, BalDue; not sure how to calculate these; see above
+        $sql = "INSERT INTO form944 (EIN ,NumEmployees ,Compensation ,FedTax ,SSTax ,MedicareTax, EMPID, CompEndDate) 
+            VALUES ($EIN ,$NumEmployees ,$Compensation ,$FedWithold ,$SSWagesTax ,$MDCWagesTax, $EMPID, $DateEnd)";
+    }
+        else{
+        $link->query("DELETE FROM form944 WHERE EIN=$EIN");
+        $sql = "INSERT INTO form944 (EIN ,NumEmployees ,Compensation ,FedTax ,SSTax ,MedicareTax, EMPID, CompEndDate) 
+            VALUES ($EIN ,$NumEmployees ,$Compensation ,$FedWithold ,$SSWagesTax ,$MDCWagesTax, '$EMPID', $DateEnd)";}
+}	
 if (!$link->query($sql)){
-    header("Location: error.php");	}
+    header("Location: error.php");	
+    // echo("Error description: " . $link -> error);
+}
 else{
     header("Location: success.php");}     
  

@@ -178,7 +178,7 @@ $TotLiabY = $row['TotLiabY'];
   </head>
   <body>
 <div><H1><center>944 Form </center></h1></div></br>
-  <form method="POST" action="944controller.php">
+  <form method="POST" <?php echo  "action='944controller.php?TotalCompensation=$Compensation&TotalFedWithhold=$FedWithold'" ?>>
 <table>
 	<tr>
 		<td colspan="4">
