@@ -39,7 +39,7 @@ if (isset($row['EmplrSuiteNum']))
 if (isset($row['EmplrCity']))
   $emplrCity = $row['EmplrCity'];
 if (isset($row['EmplrState']))
-  $emplrState = $row['EmplrState'];
+  $emplrState = strtoupper($row['EmplrState']);
 if (isset($row['EmplrZip']))
   $emplrZip = $row['EmplrZip'];
 if (isset($row['CloseDate']))
@@ -201,7 +201,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 <table>
 	<tr>
 		<td colspan="4">
-		<td><label for="941EIN">Employer identification number (EIN)</label>
+		<td><label for="941EIN">Employer Identification Number (EIN)</label>
 		<td><td><input type="text" class="form-control" id="941EIN" name="941EIN" readonly required <?php echo "value=".$EIN ?> >
 			</div>
 		</td>
@@ -224,7 +224,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 		<tr>
 		<td colspan="4">
 		<td>
-			<label for="941Number">Number</label>
+			<label for="941Number">Street Number</label>
 			<TD><td><input type="text" class="form-control" id="941Number" name="941Number" readonly required <?php echo "value=".$emplrStNum ?>>
 			</div></td>
 		<td colspan="125">
@@ -310,8 +310,8 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="941NoComp">4. If no wages, tips, and other compensation are subject to social security or Medicare tax </label>
-			<td><td><input type="text" class="form-control" id="941NoComp" name="941NoComp" readonly required <?php echo "value=".$NoComp ?>>
+			<label for="941NoComp">4. If no wages, tips, and other compensation are subject to social security or Medicare tax, check & go to line 6 </label>
+			<td><td><input type="checkbox" class="form-control" id="941NoComp" name="941NoComp" readonly >
 			</div></td>
 		</tr>
 		
@@ -469,7 +469,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 			<label for="941OvrPay">15. Overpayment. If line 13 is more than line 12</label>
 			<td><td><input type="text" class="form-control" id="941OvrPay" name="941OvrPay" readonly required <?php echo "value=".$OvrPay ?> >
 			</div></td>
-		</br></br></br>
+		</br></br>
 		</div>
 		<td colspan="10">
 		<td><div>(Check one)</div></td>
@@ -522,12 +522,12 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 			<td colspan="5">
 			<td>
 			<label for="Mth2">Month 2 </label>
-			<td><td><input type="text" class="form-control" id="Mth2" name="Mth2" readonly required <?php echo "value=".$Month1Payment ?> >
+			<td><td><input type="text" class="form-control" id="Mth2" name="Mth2" readonly required <?php echo "value=".$Month2Payment ?> >
 			</div></td>
 			<td colspan="5">
 			<td>
 			<label for="Mth3">Month 3 </label>
-			<td><td><input type="text" class="form-control" id="Mth3" name="Mth3" readonly required <?php echo "value=".$Month1Payment ?> >
+			<td><td><input type="text" class="form-control" id="Mth3" name="Mth3" readonly required <?php echo "value=".$Month3Payment ?> >
 			</div></td>
 			<td colspan="5">
 			<td>
@@ -703,3 +703,8 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 			</div></td>
 </table>
 <br><br> 
+<button style = "margin: 0 auto; display: block;" type="submit" class="btn btn-dark">Submit</button>
+  </form>
+  <br> 
+  </body>
+</html>

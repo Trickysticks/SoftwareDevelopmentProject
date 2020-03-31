@@ -39,7 +39,7 @@ if (isset($row['EmplrSuiteNum']))
 if (isset($row['EmplrCity']))
   $emplrCity = $row['EmplrCity'];
 if (isset($row['EmplrState']))
-  $emplrState = $row['EmplrState'];
+  $emplrState = strtoupper($row['EmplrState']);
 if (isset($row['EmplrZip']))
   $emplrZip = $row['EmplrZip'];
 if (isset($row['CloseDate']))
