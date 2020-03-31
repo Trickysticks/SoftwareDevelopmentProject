@@ -68,7 +68,8 @@ $row=$SSWagesQuery->fetch_assoc();
 $SSWages = $row['TotalSSWages'];
 
 //Calculating the total Social Security Tax from the Total Social Security Wages for all W2s
-$SSWagesTax = number_format($SSWages * .124,2);
+$SSWagesTaxRaw = $SSWages * .124;
+$SSWagesTax = number_format($SSWagesTaxRaw, 2);
 
 //getting total Social Security Tips of all W2s
 $SSTipsQuery = $link->query("Select Sum(SSTips) as TotalSSTips from w2");
@@ -76,7 +77,8 @@ $row=$SSTipsQuery->fetch_assoc();
 $SSTips = $row['TotalSSTips'];
 
 //Calculating the total Social Security Tips from the Total Social Security Wages for all W2s
-$SSTipsTax = number_format($SSTips * .0124,2);
+$SSTipsTaxRaw = $SSTips * .124;
+$SSTipsTax = number_format($SSTipsTaxRaw,2);
 
 //getting total Medicare Wages of all W2s
 $MDCWagesQuery = $link->query("Select Sum(MDCWages) as TotalMDCWages from w2");
@@ -84,7 +86,8 @@ $row=$MDCWagesQuery->fetch_assoc();
 $MDCWages = $row['TotalMDCWages'];
 
 //Calculating the total Medicare Wages from the Total Social Security Wages for all W2s
-$MDCWagesTax = number_format($MDCWages * .029,2);
+$MDCWagesTaxRaw = $MDCWages * .029;
+$MDCWagesTax = number_format($MDCWagesTaxRaw,2);
 
 //Getting total additiona Medicare wages of all W2s
 //$AddMDCWagesQuery = $link->query("Select Sum(MDCWages) as TotalMDCWages from w2");
@@ -97,7 +100,7 @@ $AddMDCWages = 0; //placeholder not on tax rate sheet.
 $AddMDCTax= $AddMDCWages * 0.009;
 
 // 4e. Add Column 2 from lines 4a, 4b, 4c, and 4d   
-$TotalTax= $SSWagesTax+ $SSTipsTax+ $MDCWagesTax;
+$TotalTax= $SSWagesTaxRaw + $SSTipsTaxRaw + $MDCWagesTaxRaw;
 
 
 // 5. Total taxes before adjustments. Add lines 2, 4e  e
@@ -328,7 +331,7 @@ $TotLiabY = $row['TotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="TotalTax">4e. Add Column 2 from lines 4a, 4b, 4c, and 4d  </label>
-			<td><td><input type="text" class="form-control" id="TotalTax" name="TotalTax" readonly required <?php echo "value=".$TotalTax ?>>
+			<td><td><input type="text" class="form-control" id="TotalTax" name="TotalTax" readonly required <?php echo "value=".number_format($TotalTax, 2) ?>>
 			</div></td>
 </tr>
 
@@ -336,7 +339,7 @@ $TotLiabY = $row['TotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="TotalTaxBeforeAdj">5. Total taxes before adjustments. Add lines 2, 4e </label>
-			<td><td><input type="text" class="form-control" id="TotalTaxBeforeAdj" name="TotalTaxBeforeAdj" readonly required <?php echo "value=".$TotalTaxBeforeAdj ?>>
+			<td><td><input type="text" class="form-control" id="TotalTaxBeforeAdj" name="TotalTaxBeforeAdj" readonly required <?php echo "value=".number_format($TotalTaxBeforeAdj, 2) ?>>
 			</div></td>
 </tr>  
 <tr>
@@ -351,7 +354,7 @@ $TotLiabY = $row['TotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="TotTaxAdj">7. Total taxes after adjustments. Add lines 5 and 6 </label>
-			<td><td><input type="text" class="form-control" id="TotTaxAdj" name="TotTaxAdj" readonly required <?php echo "value=".$TotTaxAdj ?>>
+			<td><td><input type="text" class="form-control" id="TotTaxAdj" name="TotTaxAdj" readonly required <?php echo "value=".number_format($TotTaxAdj, 2) ?>>
 			</div></td>
 </tr>
 
@@ -367,7 +370,7 @@ $TotLiabY = $row['TotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="ToTaxAdjb">9. Total taxes after adjustments and credits. Subtract line 8 from line 7   </label>
-			<td><td><input type="text" class="form-control" id="ToTaxAdjb" name="ToTaxAdjb" readonly required <?php echo "value=".$ToTaxAdjb ?>>
+			<td><td><input type="text" class="form-control" id="ToTaxAdjb" name="ToTaxAdjb" readonly required <?php echo "value=".number_format($ToTaxAdjb, 2) ?>>
 			</div></td>
 </tr>
 
@@ -383,7 +386,7 @@ $TotLiabY = $row['TotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="BalDue">11. Balance due. If line 9 is more than line 10, enter the difference</label>
-			<td><td><input type="text" class="form-control" id="BalDue" name="BalDue" readonly required <?php echo "value=".$BalDue ?>>
+			<td><td><input type="text" class="form-control" id="BalDue" name="BalDue" readonly required <?php echo "value=".number_format($BalDue, 2) ?>>
 			</div></td>
 </tr>
 

@@ -68,7 +68,8 @@ $row=$SSWagesQuery->fetch_assoc();
 $SSWages = $row['TotalSSWages'];
 
 //Calculating the total Social Security Tax from the Total Social Security Wages for all W2s
-$SSWagesTax = number_format($SSWages * .124,2);
+$SSWagesTaxRaw = $SSWages * .124;
+$SSWagesTax = number_format($SSWagesTaxRaw, 2);
 
 //getting total Social Security Tips of all W2s
 $SSTipsQuery = $link->query("Select Sum(SSTips) as TotalSSTips from w2");
@@ -76,7 +77,8 @@ $row=$SSTipsQuery->fetch_assoc();
 $SSTips = $row['TotalSSTips'];
 
 //Calculating the total Social Security Tips from the Total Social Security Wages for all W2s
-$SSTipsTax = number_format($SSTips * .0124,2);
+$SSTipsTaxRaw = $SSTips * .124;
+$SSTipsTax = number_format($SSTipsTaxRaw,2);
 
 //getting total Medicare Wages of all W2s
 $MDCWagesQuery = $link->query("Select Sum(MDCWages) as TotalMDCWages from w2");
@@ -84,7 +86,8 @@ $row=$MDCWagesQuery->fetch_assoc();
 $MDCWages = $row['TotalMDCWages'];
 
 //Calculating the total Medicare Wages from the Total Social Security Wages for all W2s
-$MDCWagesTax = number_format($MDCWages * .029,2);
+$MDCWagesTaxRaw = $MDCWages * .029;
+$MDCWagesTax = number_format($MDCWagesTaxRaw,2);
 
 //Getting total additiona Medicare wages of all W2s
 //$AddMDCWagesQuery = $link->query("Select Sum(MDCWages) as TotalMDCWages from w2");
@@ -97,7 +100,7 @@ $AddMDCWages = 0; //placeholder not on tax rate sheet.
 $AddMDCTax= $AddMDCWages * 0.009;
 
 // 4e. Add Column 2 from lines 4a, 4b, 4c, and 4d   
-$TotalTax= $SSWagesTax+ $SSTipsTax+ $MDCWagesTax;
+$TotalTax= $SSWagesTaxRaw + $SSTipsTaxRaw + $MDCWagesTaxRaw;
 
 
 // 6. Total taxes before adjustments. Add lines 2, 4e  e
@@ -218,8 +221,8 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 			<td><td><input type="text" class="form-control" id="941Name" name="941Name" disabled <?php echo 'value="' . $emplrName . '" '?> >
 			</div></td>
 		<td colspan="125">
-		<td><div><td><input type="radio" id="1.January,Feb,March" name="period_select" value= "1.January,Feb,March">
-			<label for="1.January,Feb,March">1. January,Feb,March</label></td>
+		<td><div><td><input type="radio" id="1.January, Feb, March" name="period_select" value= "1.January,Feb,March">
+			<label for="1.January,Feb,March">1. January, Feb, March</label></td>
 		</tr>	
 		<tr>
 		<td colspan="4">
@@ -239,8 +242,8 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 			<TD><td><input type="text" class="form-control" id="941Street" name="941Street" readonly required <?php echo "value=".$emplrStAdd ?>>
 			</div></td>
 		<td colspan="125">
-			<td><div><td><input type="radio" id="3.July,August,September" name="period_select" value= "3.July,August,September">
-			<label for="3. July,August,September">3. July,August,September</label></td>
+			<td><div><td><input type="radio" id="3.July, August, September" name="period_select" value= "3.July,August,September">
+			<label for="3. July,August,September">3. July, August, September</label></td>
 		</tr>	
 		<tr>
 		<td colspan="4">
@@ -374,7 +377,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 		<td colspan="4">
 		<td>
 			<label for="TotalTax">5e. Add Column 2 from lines 5a, 5b, 5c, and 5d  </label>
-			<td><td><input type="text" class="form-control" id="TotalTax" name="TotalTax" readonly required <?php echo "value=".$TotalTax ?>>
+			<td><td><input type="text" class="form-control" id="TotalTax" name="TotalTax" readonly required <?php echo "value=".number_format($TotalTax, 2) ?>>
 			</div></td>
 </tr>
 
@@ -391,7 +394,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 		<td colspan="4">
 		<td>
 			<label for="941TotTax">6. Total taxes before adjustments. Add lines 3, 5e, and 5f </label>
-			<td><td><input type="text" class="form-control" id="TotalTaxBeforeAdj" name="TotalTaxBeforeAdj" readonly required <?php echo "value=".$TotalTaxBeforeAdj ?>>
+			<td><td><input type="text" class="form-control" id="TotalTaxBeforeAdj" name="TotalTaxBeforeAdj" readonly required <?php echo "value=".number_format($TotalTaxBeforeAdj, 2) ?>>
 			</div></td>
 </tr>
 
@@ -426,7 +429,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 		<td colspan="4">
 		<td>
 			<label for="941ToTaxAdja">10. Total taxes after adjustments. Combine lines 6 through 9   </label>
-			<td><td><input type="text" class="form-control" id="941ToTaxAdja" name="941ToTaxAdja" readonly required <?php echo "value=".$TotTaxAdj ?> >
+			<td><td><input type="text" class="form-control" id="941ToTaxAdja" name="941ToTaxAdja" readonly required <?php echo "value=".number_format($TotTaxAdj, 2) ?> >
 			</div></td>
 </tr>
 
@@ -442,7 +445,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 		<td colspan="4">
 		<td>
 			<label for="941ToTaxAdjb">12. Total taxes after adjustments and credits. Subtract line 11 from line 10   </label>
-			<td><td><input type="text" class="form-control" id="941ToTaxAdjb" name="941ToTaxAdjb" readonly required <?php echo "value=".$ToTaxAdjb ?> >
+			<td><td><input type="text" class="form-control" id="941ToTaxAdjb" name="941ToTaxAdjb" readonly required <?php echo "value=".number_format($ToTaxAdjb, 2) ?> >
 			</div></td>
 </tr>
 
@@ -458,7 +461,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 		<td colspan="4">
 		<td>
 			<label for="941Bal">14. Balance due. If line 12 is more than line 13, enter the difference and see instructions   </label>
-			<td><td><input type="text" class="form-control" id="941Bal" name="941Bal" readonly required <?php echo "value=".$BalDue ?> >
+			<td><td><input type="text" class="form-control" id="941Bal" name="941Bal" readonly required <?php echo "value=".number_format($BalDue, 2) ?> >
 			</div></td>
 </tr>
 </table>
@@ -532,7 +535,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 			<td colspan="5">
 			<td>
 			<label for="TotalLiab">Total Liability for quater </label>
-			<td><td><input type="text" class="form-control" id="TotalLiab" name="TotalLiab" readonly required <?php echo "value=".$TotalLiability ?> >
+			<td><td><input type="text" class="form-control" id="TotalLiab" name="TotalLiab" readonly required <?php echo "value=".number_format($TotalLiability, 2) ?> >
 			</div></td>
 </tr>
 
