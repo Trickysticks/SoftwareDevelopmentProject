@@ -1,3 +1,189 @@
+<?php
+//Author: Timothy Dees
+include("navbar.php");
+include("config.php"); 
+ 
+ $currentId = $_SESSION["id"];
+
+$deptId = $middleInitial = $streetName = $aptNum = $city = $state = $zip = $streetNum =$firstName= $lastName = $SSN = $salary=  "";
+//puling all info from employee table
+$employeeInfo = $link->query("SELECT * FROM employee WHERE empid=$currentId");
+while ($row=$employeeInfo->fetch_assoc()){
+  if (isset($row['FirstName']))
+    $firstName = $row['FirstName'];
+  if (isset($row['LastName']))
+    $lastName = filter_var($row['LastName']);
+  if (isset($row['Title']))
+    $Title = $row['Title'];
+if (isset($row['Empid']))
+    $Empid = $row['Empid'];
+  if (isset($row['PTIN']))
+    $PTIN = $row['PTIN'];
+}
+//combining employee name ; first and last
+$employeeName = $firstName . " " . $lastName;
+
+//pulling all info from employer table
+$employerInfo = $link->query("SELECT * FROM employer");
+$row = $employerInfo->fetch_assoc();
+if (isset($row['EIN']))
+  $EIN = $row['EIN'];
+if (isset($row['EmplrName']))
+  $emplrName = $row['EmplrName'];
+if (isset($row['EmplrStNum']))
+  $emplrStNum = $row['EmplrStNum'];
+if (isset($row['EmplrStAdd']))
+  $emplrStAdd = $row['EmplrStAdd'];
+if (isset($row['EmplrSuiteNum']))
+  $emplrSuiteNum = $row['EmplrSuiteNum'];
+if (isset($row['EmplrCity']))
+  $emplrCity = $row['EmplrCity'];
+if (isset($row['EmplrState']))
+  $emplrState = $row['EmplrState'];
+if (isset($row['EmplrZip']))
+  $emplrZip = $row['EmplrZip'];
+if (isset($row['CloseDate']))
+  $CloseDate = $row['CloseDate'];
+
+//combining employer address into 2 rows
+$employerAddress1 = $emplrStNum . " " . $emplrStAdd . " " . $emplrSuiteNum;
+$employerAddress2 =$emplrCity . ", " . $emplrState . " " . $emplrZip;
+
+//getting total compensation of all W2s
+$CompensationQuery = $link->query("Select Sum(Compensation+SSWages+MDCWages+SSTips) as TotalCompensation from w2");
+$row=$CompensationQuery->fetch_assoc();
+$Compensation = $row['TotalCompensation'];
+
+//getting total federal witholdings of all W2s
+$FedWitholdQuery = $link->query("Select Sum(FedWithold) as TotalFedWithhold from w2");
+$row=$FedWitholdQuery->fetch_assoc();
+$FedWithold = $row['TotalFedWithhold'];
+
+// 3. If no wages, tips, and other compensation are subject to social security or Medicare tax 
+$NoComp = 0; //place holder not sure what this is
+
+//getting total Social Security Wages of all W2s
+$SSWagesQuery = $link->query("Select Sum(SSWages) as TotalSSWages from w2");
+$row=$SSWagesQuery->fetch_assoc();
+$SSWages = $row['TotalSSWages'];
+
+//Calculating the total Social Security Tax from the Total Social Security Wages for all W2s
+$SSWagesTax = number_format($SSWages * .124,2);
+
+//getting total Social Security Tips of all W2s
+$SSTipsQuery = $link->query("Select Sum(SSTips) as TotalSSTips from w2");
+$row=$SSTipsQuery->fetch_assoc();
+$SSTips = $row['TotalSSTips'];
+
+//Calculating the total Social Security Tips from the Total Social Security Wages for all W2s
+$SSTipsTax = number_format($SSTips * .0124,2);
+
+//getting total Medicare Wages of all W2s
+$MDCWagesQuery = $link->query("Select Sum(MDCWages) as TotalMDCWages from w2");
+$row=$MDCWagesQuery->fetch_assoc();
+$MDCWages = $row['TotalMDCWages'];
+
+//Calculating the total Medicare Wages from the Total Social Security Wages for all W2s
+$MDCWagesTax = number_format($MDCWages * .029,2);
+
+//Getting total additiona Medicare wages of all W2s
+//$AddMDCWagesQuery = $link->query("Select Sum(MDCWages) as TotalMDCWages from w2");
+//$row=$AddMDCWagesQuery->fetch_assoc();
+//$AddMDCWages = $row['AddMDCWages'];
+$AddMDCWages = 0; //placeholder not on tax rate sheet.
+
+
+//Calculating the additional Medicare Wages from the Total additional Medicare Wages for all W2s
+$AddMDCTax= $AddMDCWages * 0.009;
+
+// 4e. Add Column 2 from lines 4a, 4b, 4c, and 4d   
+$TotalTax= $SSWagesTax+ $SSTipsTax+ $MDCWagesTax;
+
+
+// 6. Total taxes before adjustments. Add lines 2, 4e  e
+$TotalTaxBeforeAdj= $FedWithold +$TotalTax;
+
+//Section 3121(q) Notice and Demand—Tax due on unreported tips (see instructions)
+$UnreportedTipTax = 0;
+
+//7. Current quarter’s adjustment for fractions of cents
+$QuarterFractionAdjustment = 0;
+
+//8. Current quarter’s adjustment for sick pay
+$QuarterSickPayAdjustment = 0;
+
+//9. Current quarter’s adjustments for tips and group-term life insurance
+$QuarterTipLifeInsuranceAdjustment = 0;
+
+//10. Total taxes after adjustments. Combine lines 6 through 9
+ 
+$TotTaxAdj= $TotalTaxBeforeAdj + $QuarterFractionAdjustment + $QuarterSickPayAdjustment + $QuarterTipLifeInsuranceAdjustment; //0 is a place holder for $CYAdj 
+
+// 11. Qualified small business payroll tax credit for increasing research activities. .
+$SmlBusCred = 0; //0 is a place holder for $SmlBusCred
+
+
+// 12. Total taxes after adjustments and credits. Subtract line 11 from line 10
+$ToTaxAdjb = $TotTaxAdj- $SmlBusCred;
+
+
+//13. Total deposits for this year, including overpayment applied from a prior year ; not sure what the deposits are?
+ $YrlyDep = 0; //0 is a place holder for $YrlyDep
+ 
+ 
+// 11. Balance due. If line 9 is more than line 10, enter the difference 
+//$BalDueQuery = $link->query("CASE when $YrlyDep > $ToTaxAdjb then (select $ToTaxAdjb - $YrlyDep from 944 ) else  '0' end as BalDue)  ");
+//$row=$BalDueQuery->fetch_assoc();
+//$BalDue = $row['BalDue'];
+$BalDue = $ToTaxAdjb - $YrlyDep ;
+
+
+ // 12. Overpayment. If line 10 is more than line 9 
+//$OvrPayQuery = $link->query" CASE when YrlyDep > ToTaxAdjb then (select YrlyDep - ToTaxAdjb from 944 ) else  '0' end as OvrPay)  ");
+//$row=$OvrPayQuery->fetch_assoc();
+//$OvrPay = $row['OvrPay'];
+$OvrPay = 0;
+
+//To populate monthly deposit schedule and tax liability secontion 13.a-l
+//$DepositSchedule =  mysqli_query("Select sum(MDCTax+SSTax+FEDTax+STATETax) as dep_Sched from payroll group by payrollMonth");
+//$row = mysqli_fetch_array($DepositSchedule);
+//$sum = $row[dep_Sched]; 
+//below is a test to see how it populates.
+$jan = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'jan'");
+$feb = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'feb'");
+$march = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'march'");
+$april = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'april'");
+$may = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'may'");
+$june = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'june'");
+$july = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'july'");
+$aug = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'aug'");
+$sept = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'sept'");
+$oct = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'oct'");
+$nov = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'nov'");
+$dec = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'dec'");
+
+
+//Total liability for year. Add lines 13a through 13l. Total must equal line 9 
+$TotLiabYQuery = $link->query("Select sum(MDCTax+SSTax+FEDTax+STATETax) as sumTotLiabY from payroll group by empid ");
+$row=$TotLiabYQuery->fetch_assoc();
+$TotLiabY = $row['TotLiabY'];
+
+//these are nonsense, replace
+
+$Month1PaymentRaw = $ToTaxAdjb/3;
+$Month2PaymentRaw = $ToTaxAdjb/3;
+$Month3PaymentRaw = $ToTaxAdjb/3;
+
+
+$Month1Payment = number_format($Month1PaymentRaw, 2);
+$Month2Payment = number_format($Month2PaymentRaw, 2);
+$Month3Payment = number_format($Month3PaymentRaw, 2);
+
+$TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
+
+ 
+ ?>
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -10,15 +196,13 @@
   </head>
   <body>
 	
-<body>
-<?php include("navbar.php") ?>
-
 <div><H1><center>941 Form </center></h1></div></br>
+  <form method="POST" <?php echo  "action='941controller.php?TotalCompensation=$Compensation&TotalFedWithhold=$FedWithold'" ?>>
 <table>
 	<tr>
 		<td colspan="4">
 		<td><label for="941EIN">Employer identification number (EIN)</label>
-		<td><td><input type="text" class="form-control" id="941EIN" name="941EIN" >
+		<td><td><input type="text" class="form-control" id="941EIN" name="941EIN" readonly required <?php echo "value=".$EIN ?> >
 			</div>
 		</td>
 			
@@ -31,69 +215,62 @@
 		<td colspan="4">
 		<td>
 			<label for="941Name">Name</label>
-			<td><td><input type="text" class="form-control" id="941Name" name="941Name" >
+			<td><td><input type="text" class="form-control" id="941Name" name="941Name" disabled <?php echo 'value="' . $emplrName . '" '?> >
 			</div></td>
 		<td colspan="125">
-		<td><div><td><input type="radio" id="1.January,Feb,March" name="1.January,Feb,March" value= "1.January,Feb,March">
+		<td><div><td><input type="radio" id="1.January,Feb,March" name="period_select" value= "1.January,Feb,March">
 			<label for="1.January,Feb,March">1. January,Feb,March</label></td>
 		</tr>	
 		<tr>
 		<td colspan="4">
 		<td>
-			<label for="941Address">Address</label>
-			<td><td><input type="text" class="form-control" id="941Address" name="941Address" >
-			</div></td>
-		<td colspan="125">
-		<td>
-			<td><div><input type="radio" id="2.April, May, June" name="2.April, May, June" value= "2.April, May, June">
-			<label for="2. April, May, June">2. April, May, June</label></td>
-		</tr>	
-			
-		<tr>
-		<td colspan="4">
-		<td>
 			<label for="941Number">Number</label>
-			<TD><td><input type="text" class="form-control" id="941Number" name="941Number" >
+			<TD><td><input type="text" class="form-control" id="941Number" name="941Number" readonly required <?php echo "value=".$emplrStNum ?>>
 			</div></td>
 		<td colspan="125">
-			<td><div><td><input type="radio" id="3.July,August,September" name="3.July,August,September" value= "3.July,August,September">
-			<label for="3. July,August,September">3. July,August,September</label></td>
+		<td>
+			<td><div><input type="radio" id="2.April, May, June" name="period_select" value= "2.April, May, June">
+			<label for="2. April, May, June">2. April, May, June</label></td>
 		</tr>	
 		<tr>
 		<td colspan="4">
 		<td>
 			<label for="941Street">Street</label>
-			<TD><td><input type="text" class="form-control" id="941Street" name="941Street" >
+			<TD><td><input type="text" class="form-control" id="941Street" name="941Street" readonly required <?php echo "value=".$emplrStAdd ?>>
 			</div></td>
 		<td colspan="125">
-			<td><div><td><input type="radio" id="4.October, November, December" name="4.October, November, December" value= "4.October, November, December">
-			<label for="4.October, November, December">4. October, November, December</label></td>
-		</tr>
+			<td><div><td><input type="radio" id="3.July,August,September" name="period_select" value= "3.July,August,September">
+			<label for="3. July,August,September">3. July,August,September</label></td>
+		</tr>	
 		<tr>
 		<td colspan="4">
 		<td>
 			<label for="941Suite">Suite</label>
-			<td><td><input type="text" class="form-control" id="941Suite" name="941Suite" >
+			<td><td><input type="text" class="form-control" id="941Suite" name="941Suite" readonly required <?php echo "value=".$emplrSuiteNum ?>>
 			</div></td>
+			<td colspan="125">
+			<td><div><td><input type="radio" id="4.October, November, December" name="period_select" value= "4.October, November, December">
+			<label for="4.October, November, December">4. October, November, December</label></td>
+		</tr>
 		</tr>
 		<td colspan="4">
 		<td>
 			<label for="941City">City</label>
-			<td><td><input type="text" class="form-control" id="941City" name="941City" >
+			<td><td><input type="text" class="form-control" id="941City" name="941City" readonly required  <?php echo 'value="' . $emplrCity . '" '?>>
 			</div></td>
 		</tr>
 		<tr>
 		<td colspan="4">
 		<td>
 			<label for="941State">State</label>
-			<td><td><input type="text" class="form-control" id="941State" name="941State" >
+			<td><td><input type="text" class="form-control" id="941State" name="941State" readonly required <?php echo "value=".$emplrState ?>>
 			</div></td>
 		</tr>
 		<tr>
 		<td colspan="4">
 		<td>
 			<label for="941Zip">Zip Code</label>
-			<td><td><input type="text" class="form-control" id="941Zip" name="941Zip" >
+			<td><td><input type="text" class="form-control" id="941Zip" name="941Zip" readonly required <?php echo "value=".$emplrZip ?>>
 			</div></td>
 		</tr>
 	</table>
@@ -115,7 +292,7 @@
 		<td colspan="4">
 		<td>
 			<label for="941Comp">2. Wages, tips, and other compensation </label>
-			<td><td><input type="text" class="form-control" id="941Comp" name="941Comp" >
+			<td><td><input type="text" class="form-control" id="941Comp" name="941Comp" readonly required <?php echo "value=".$Compensation ?>>
 			</div></td>
 		</tr>
 
@@ -124,7 +301,7 @@
 		<td colspan="4">
 		<td>
 			<label for="941FedTax">3. Federal income tax withheld from wages, tips, and other compensation </label>
-			<td><td><input type="text" class="form-control" id="941FedTax" name="941FedTax" >
+			<td><td><input type="text" class="form-control" id="941FedTax" name="941FedTax" readonly required <?php echo "value=".$FedWithold ?>>
 			</div></td>
 		</tr>
 		
@@ -134,7 +311,7 @@
 		<td colspan="4">
 		<td>
 			<label for="941NoComp">4. If no wages, tips, and other compensation are subject to social security or Medicare tax </label>
-			<td><td><input type="text" class="form-control" id="941NoComp" name="941NoComp" >
+			<td><td><input type="text" class="form-control" id="941NoComp" name="941NoComp" readonly required <?php echo "value=".$NoComp ?>>
 			</div></td>
 		</tr>
 		
@@ -144,68 +321,69 @@
 		<tr>
 		<td colspan="4">
 		<td>
-			<label for="941SSWage">5a. Taxable social security wages</label>
-			<td><td><input type="text" class="form-control" id="941SSWage" name="941SSWage" >
+			<label for="SSWages">5a. Taxable social security wages</label>
+			<td><td><input type="text" class="form-control" id="SSWages" name="SSWages" readonly required <?php echo "value=".$SSWages ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
-			<label for="wages2">x 0.124 = </label>
-			<td><td><input type="text" class="form-control" id="wages2" name="wages2" >
+			<label for="SSWagesTax">x 0.124 = </label>
+			<td><td><input type="text" class="form-control" id="SSWagesTax" name="SSWagesTax" readonly required <?php echo "value=".$SSWagesTax ?>>
 			</div></td>
 </tr>	
 
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="941SSTip">5b. Taxable social security tips</label>
-			<td><td><input type="text" class="form-control" id="941SSTip" name="941SSTip" >
+			<label for="SSTip">5b. Taxable social security tips</label>
+			<td><td><input type="text" class="form-control" id="SSTip" name="SSTip" readonly required <?php echo "value=".$SSTips ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
-			<label for="wages2">x 0.124 = </label>
-			<td><td><input type="text" class="form-control" id="wages2" name="wages2" >
+			<label for="SSTipsTax">x 0.124 = </label>
+			<td><td><input type="text" class="form-control" id="SSTipsTax" name="SSTipsTax" readonly required <?php echo "value=".$SSTipsTax ?>>
 			</div></td>
 </tr>
 
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="941MDCWage">5c. Taxable Medicare wages & tips</label>
-			<td><td><input type="text" class="form-control" id="941MDCWage" name="941MDCWage" >
+			<label for="MDCWages">5c. Taxable Medicare wages & tips</label>
+			<td><td><input type="text" class="form-control" id="MDCWages" name="MDCWages" readonly required <?php echo "value=".$MDCWages ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
-			<label for="wages2">x 0.029 = </label>
-			<td><td><input type="text" class="form-control" id="wages2" name="wages2" >
+			<label for="MDCWagesTax">x 0.029 = </label>
+			<td><td><input type="text" class="form-control" id="MDCWagesTax" name="MDCWagesTax" readonly required <?php echo "value=".$MDCWagesTax ?>>
 			</div></td>
 </tr>
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="941MDCTip">5d. Taxable wages & tips subject to Additional Medicare Tax withholding</label>
-			<td><td><input type="text" class="form-control" id="941MDCTip" name="941MDCTip" >
+			<label for="MDCTip">5d. Taxable wages & tips subject to Additional Medicare Tax withholding</label>
+			<td><td><input type="text" class="form-control" id="MDCTip" name="MDCTip" readonly required <?php echo "value=".$AddMDCWages ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
-			<label for="wages2">x 0.009 = </label>
-			<td><td><input type="text" class="form-control" id="wages2" name="wages2" >
+			<label for="MDCTipTax">x 0.009 = </label>
+			<td><td><input type="text" class="form-control" id="MDCTipTax" name="MDCTipTax" readonly required <?php echo "value=".$AddMDCTax ?>>
 			</div></td>
 </tr>
-</Table>
+</table>
 <table>
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="941Add5abcd">5e. Add Column 2 from lines 5a, 5b, 5c, and 5d  </label>
-			<td><td><input type="text" class="form-control" id="941Add5abcd" name="941Add5abcd" >
+			<label for="TotalTax">5e. Add Column 2 from lines 5a, 5b, 5c, and 5d  </label>
+			<td><td><input type="text" class="form-control" id="TotalTax" name="TotalTax" readonly required <?php echo "value=".$TotalTax ?>>
 			</div></td>
 </tr>
+
 		
 <tr>
 		<td colspan="4">
 		<td>
 			<label for="941DemTax">5f. Section 3121(q) Notice and Demand—Tax due on unreported tips (see instructions)  </label>
-			<td><td><input type="text" class="form-control" id="941DemTax" name="941DemTax" >
+			<td><td><input type="text" class="form-control" id="941DemTax" name="941DemTax" readonly required <?php echo "value=".$UnreportedTipTax ?>>
 			</div></td>
 </tr>
 
@@ -213,7 +391,7 @@
 		<td colspan="4">
 		<td>
 			<label for="941TotTax">6. Total taxes before adjustments. Add lines 3, 5e, and 5f </label>
-			<td><td><input type="text" class="form-control" id="941TotTax" name="941TotTax" >
+			<td><td><input type="text" class="form-control" id="TotalTaxBeforeAdj" name="TotalTaxBeforeAdj" readonly required <?php echo "value=".$TotalTaxBeforeAdj ?>>
 			</div></td>
 </tr>
 
@@ -221,7 +399,7 @@
 		<td colspan="4">
 		<td>
 			<label for="941QAdj">7. Current quarter’s adjustment for fractions of cents </label>
-			<td><td><input type="text" class="form-control" id="941QAdj" name="941QAdj" >
+			<td><td><input type="text" class="form-control" id="941QAdj" name="941QAdj" readonly required <?php echo "value=".$QuarterFractionAdjustment ?>>
 			</div></td>
 </tr>
 
@@ -230,7 +408,7 @@
 		<td colspan="4">
 		<td>
 			<label for="941QSick">8. Current quarter’s adjustment for sick pay  </label>
-			<td><td><input type="text" class="form-control" id="941QSick" name="941QSick" >
+			<td><td><input type="text" class="form-control" id="941QSick" name="941QSick" readonly required <?php echo "value=".$QuarterSickPayAdjustment ?> >
 			</div></td>
 </tr>
 
@@ -239,7 +417,7 @@
 		<td colspan="4">
 		<td>
 			<label for="941QIns">9. Current quarter’s adjustments for tips and group-term life insurance   </label>
-			<td><td><input type="text" class="form-control" id="941QIns" name="941QIns" >
+			<td><td><input type="text" class="form-control" id="941QIns" name="941QIns" readonly required <?php echo "value=".$QuarterTipLifeInsuranceAdjustment ?>  >
 			</div></td>
 </tr>
 
@@ -248,7 +426,7 @@
 		<td colspan="4">
 		<td>
 			<label for="941ToTaxAdja">10. Total taxes after adjustments. Combine lines 6 through 9   </label>
-			<td><td><input type="text" class="form-control" id="941ToTaxAdja" name="941ToTaxAdja" >
+			<td><td><input type="text" class="form-control" id="941ToTaxAdja" name="941ToTaxAdja" readonly required <?php echo "value=".$TotTaxAdj ?> >
 			</div></td>
 </tr>
 
@@ -256,7 +434,7 @@
 		<td colspan="4">
 		<td>
 			<label for="941SmlBus">11. Qualified small business payroll tax credit for increasing research activities. Attach Form 8974   </label>
-			<td><td><input type="text" class="form-control" id="941SmlBus" name="941SmlBus" >
+			<td><td><input type="text" class="form-control" id="941SmlBus" name="941SmlBus" readonly required <?php echo "value=".$SmlBusCred ?> >
 			</div></td>
 </tr>
 
@@ -264,7 +442,7 @@
 		<td colspan="4">
 		<td>
 			<label for="941ToTaxAdjb">12. Total taxes after adjustments and credits. Subtract line 11 from line 10   </label>
-			<td><td><input type="text" class="form-control" id="941ToTaxAdjb" name="941ToTaxAdjb" >
+			<td><td><input type="text" class="form-control" id="941ToTaxAdjb" name="941ToTaxAdjb" readonly required <?php echo "value=".$ToTaxAdjb ?> >
 			</div></td>
 </tr>
 
@@ -272,7 +450,7 @@
 		<td colspan="4">
 		<td>
 			<label for="941DepQ">13 Total deposits for this quarter, including overpayment applied from a prior quarter and overpayments applied from Form 941-X, 941-X (PR), 944-X, or 944-X (SP) filed in the current qtr   </label>
-			<td><td><input type="text" class="form-control" id="941DepQ" name="941DepQ" >
+			<td><td><input type="text" class="form-control" id="941DepQ" name="941DepQ" readonly required <?php echo "value=".$YrlyDep ?> >
 			</div></td>
 </tr>
 
@@ -280,7 +458,7 @@
 		<td colspan="4">
 		<td>
 			<label for="941Bal">14. Balance due. If line 12 is more than line 13, enter the difference and see instructions   </label>
-			<td><td><input type="text" class="form-control" id="941Bal" name="941Bal" >
+			<td><td><input type="text" class="form-control" id="941Bal" name="941Bal" readonly required <?php echo "value=".$BalDue ?> >
 			</div></td>
 </tr>
 </table>
@@ -289,7 +467,7 @@
 		<td colspan="4">
 		<td>
 			<label for="941OvrPay">15. Overpayment. If line 13 is more than line 12</label>
-			<td><td><input type="text" class="form-control" id="941OvrPay" name="941OvrPay" >
+			<td><td><input type="text" class="form-control" id="941OvrPay" name="941OvrPay" readonly required <?php echo "value=".$OvrPay ?> >
 			</div></td>
 		</br></br></br>
 		</div>
@@ -297,11 +475,11 @@
 		<td><div>(Check one)</div></td>
 		</tr>
 			<td colspan="25">
-		<td><div><td><input type="radio" id="Apply to next return" name="Apply to next return" value= "Apply to next return">
+		<td><div><td><input type="radio" id="Apply to next return" name="Overpayment_Prompt" value= "Apply to next return">
 			<label for="Apply to next return">Apply to next return</label></td>
 			
 			<td colspan="25">
-		<td><div><td><input type="radio" id="Send to refund" name="Send to refund" value= "Send to refund">
+		<td><div><td><input type="radio" id="Send to refund" name="Overpayment_Prompt" value= "Send to refund">
 			<label for="Send to refund">Send to refund</label></td>
 		</tr>	
 </tr>
@@ -314,7 +492,7 @@
 		<td>
 		<table>
 	    <div class="form-group col-md-3">
-		<td colspan="150"><div><input type="radio" id="941opt1" name="941opt1" value= "941opt1">
+		<td colspan="150"><div><input type="radio" id="941opt1" name="941_Option" value= "941opt1">
 			<label for="941opt1">Line 12 on this return is less than $2,500 or line 12 on the return for the prior quarter was less than $2,500, and you didn’t
 			incur a $100,000 next-day deposit obligation during the current quarter. If line 12 for the prior quarter was less than $2,500 but
 			line 12 on this return is $100,000 or more, you must provide a record of your federal tax liability. If you are a monthly schedule
@@ -325,7 +503,7 @@
 		<td colspan="4">
 		<td colspan="150">
 		<td>
-			<td><div><input type="radio" id="941opt2" name="941opt2" value= "941opt2">
+			<td><div><input type="radio" id="941opt2" name="941_Option" value= "941opt2">
 			<label for="941opt2">You were a monthly schedule depositor for the entire quarter. Enter your tax liability for each month and total
 			liability for the quarter, then go to Part 3.</label></td>
 </tr>
@@ -339,22 +517,22 @@
 			<td colspan="5">
 			<td>
 			<label for="Mth1">Month 1 </label>
-			<td><td><input type="text" class="form-control" id="Mth1" name="Mth1" >
+			<td><td><input type="text" class="form-control" id="Mth1" name="Mth1" readonly required <?php echo "value=".$Month1Payment ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
 			<label for="Mth2">Month 2 </label>
-			<td><td><input type="text" class="form-control" id="Mth2" name="Mth2" >
+			<td><td><input type="text" class="form-control" id="Mth2" name="Mth2" readonly required <?php echo "value=".$Month1Payment ?> >
 			</div></td>
 			<td colspan="5">
 			<td>
 			<label for="Mth3">Month 3 </label>
-			<td><td><input type="text" class="form-control" id="Mth3" name="Mth3" >
+			<td><td><input type="text" class="form-control" id="Mth3" name="Mth3" readonly required <?php echo "value=".$Month1Payment ?> >
 			</div></td>
 			<td colspan="5">
 			<td>
 			<label for="TotalLiab">Total Liability for quater </label>
-			<td><td><input type="text" class="form-control" id="TotalLiab" name="TotalLiab" >
+			<td><td><input type="text" class="form-control" id="TotalLiab" name="TotalLiab" readonly required <?php echo "value=".$TotalLiability ?> >
 			</div></td>
 </tr>
 
@@ -414,101 +592,53 @@
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="name">Name</label>
-			<td><td><input type="text" class="form-control" id="name" name="name" >
+			<label for="944name">Name</label>
+			<td><td><input type="text" class="form-control" id="944name" name="944name" disabled <?php echo 'value="'.$employeeName. '" '?> >
 			</div></td>
 </tr>
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="title">Title</label>
-			<td><td><input type="text" class="form-control" id="title" name="title" >
+			<label for="944title">Title</label>
+			<td><td><input type="text" class="form-control" id="944title" name="944title" readonly required <?php echo "value=".$Title ?>> 
 			</div></td>
 </tr>
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="phone">Phone</label>
-			<td><td><input type="text" class="form-control" id="phone" name="phone" >
+			<label for="944date">Date</label>
+			<td><td><input type="text" class="form-control" id="944date" name="944date" readonly required <?php echo "value=".date("Y/m/d"); ?> >
 			</div></td>
 </tr>
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="signature">Electonic signature</label>
-			<td><td><input type="text" class="form-control" id="signature" name="signature" >
-			</div></td>
-</tr>
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="date">Date</label>
-			<td><td><input type="text" class="form-control" id="date" name="date" >
-			</div></td>
-</tr>
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="PTIN">PTIN</label>
-			<td><td><input type="text" class="form-control" id="PTIN" name="PTIN" >
+			<label for="944PTIN">PTIN</label>
+			<td><td><input type="text" class="form-control" id="944PTIN" name="944PTIN" readonly required <?php echo "value=".$PTIN ?> >
 			</div></td>
 </tr>
 
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="EIN">EIN</label>
-			<td><td><input type="text" class="form-control" id="EIN" name="EIN" >
+			<label for="944EIN">EIN</label>
+			<td><td><input type="text" class="form-control" id="944EIN" name="944EIN" readonly required <?php echo "value=".$EIN ?>>
 			</div></td>
 </tr>
 
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="Address">Address</label>
-			<td><td><input type="text" class="form-control" id="Address" name="Address" >
+			<label for="944Address">Address</label>
+			<td><td><input type="text" class="form-control" id="944Address" name="944Address" disabled <?php echo 'value="' . $employerAddress1 . '" '?> >
 </tr>	
 			
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="Number">Number</label>
-			<TD><td><input type="text" class="form-control" id="Number" name="Number" >
+			<label for="944Address">Address</label>
+			<TD><td><input type="text" class="form-control" id="944Address" name="944Address" disabled <?php echo 'value="' . $employerAddress2 . '" '?> >
 
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="Street">Street</label>
-			<TD><td><input type="text" class="form-control" id="Street" name="Street" >
-
-</tr>
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="Suite">Suite</label>
-			<td><td><input type="text" class="form-control" id="Suite" name="Suite" >
-			</div></td>
-</tr>
-		<td colspan="4">
-		<td>
-			<label for="City">City</label>
-			<td><td><input type="text" class="form-control" id="City" name="City" >
-			</div></td>
-</tr>
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="State">State</label>
-			<td><td><input type="text" class="form-control" id="State" name="State" >
-			</div></td>
-</tr>
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="941Zip">Zip Code</label>
-			<td><td><input type="text" class="form-control" id="941Zip" name="941Zip" >
-			</div></td>
-</tr>
 
 </table>
 
@@ -518,15 +648,15 @@
 
 <br><br>
 <table>
-<td colspan="150">
-<div><H5><left>941-V <br></left></h5></div>
-<H6><left>Department of the Treasury</left></h6>
-<H6><left>Internal Revenue Service</left></h6>
-<td colspan="150">
-<H3><center>Payment Voucher <br></center></h3></div>
-<td colspan="150">
-<H5><right>OMB No. 1545-0029 <br></right></h5></div>
-<H3><right>2020</right></h3>
+	<td colspan="150">
+	<div><H5><left>944-V <br></left></h5></div>
+		<H6><left>Department of the Treasury</left></h6>
+		<H6><left>Internal Revenue Service</left></h6></td>
+	<td colspan="150">
+		<div><H3><center>Payment Voucher <br></center></h3></div></td>
+	<td colspan="150">
+		<div><H5><right>OMB No. 1545-0029 <br></right></h5></div>
+		<H3><right>2020</right></h3></td>
 
 </table>
 
@@ -534,38 +664,42 @@
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="EIN">Employee Identification Number (EIN)</label>
-			<td><td><input type="text" class="form-control" id="EIN" name="EIN" >
+			<label for="944EIN">(EIN)</label>
+			<td><td><input type="text" class="form-control" id="944EIN" name="944EIN" readonly required <?php echo "value=".$EIN ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
-			<label for="wages2">Payment </label>
-			<td><td><input type="text" class="form-control" id="wages2" name="wages2" >
+			<label for="944Payment">Payment </label>
+			<td><td><input type="text" class="form-control" id="944Payment" name="944Payment" >
 			</div></td><br>
-			<tr>
+</tr>
 		<td colspan="4">
 		<td>
-			<label for="Period">Tax Period</label>
-			<td><td><input type="text" class="form-control" id="Period" name="Period" >
+			<label for="944Period">Tax Period</label>
+			<td><td><input type="text" class="form-control" id="944Period" name="944Period"  readonly required <?php echo "value=".date("Y"); ?> >
 			</div></td>
-			<td colspan="5">
+</table>
+<table>	
+	
+		<td colspan="5">
 			<td>
-			<label for="Business">Business Name </label>
-			<td><td><input type="text" class="form-control" id="Business" name="Business" >
+			<label for="944Business">Bus Name </label>
+			<td><td><input type="text" class="form-control" id="944Business" name="944Business" disabled <?php echo 'value="' . $emplrName . '" '?>  >
 			</div></td>
-<table>
+</table>
 <table>	
 	
 		<td colspan="219">
 		<td>
-			<label for="BusinessAdd1">Business Addr1 </label>
-			<td><td><input type="text" class="form-control" id="BusinessAdd1" name="BusinessAdd1" >
+			<label for="944BusinessAdd1">Bus Addr1 </label>
+			<td><td><input type="text" class="form-control" id="944BusinessAdd1" name="944BusinessAdd1" disabled <?php echo 'value="' . $employerAddress1 . '" '?> >
 			</div></td>
 </table>
 <table>		
 		<td colspan="219">
 		<td>
-			<label for="Business2">Business Addr2 </label>
-			<td><td><input type="text" class="form-control" id="Business2" name="Business2" >
+			<label for="944Business2">Bus Addr2 </label>
+			<td><td><input type="text" class="form-control" id="944Business2" name="944Business2" disabled <?php echo 'value="' . $employerAddress2 . '" '?> >
 			</div></td>
 </table>
+<br><br> 
