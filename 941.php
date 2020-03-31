@@ -646,65 +646,6 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 </table>
 
 
-
-<br><br><br>	
-
-<br><br>
-<table>
-	<td colspan="150">
-	<div><H5><left>941-V <br></left></h5></div>
-		<H6><left>Department of the Treasury</left></h6>
-		<H6><left>Internal Revenue Service</left></h6></td>
-	<td colspan="150">
-		<div><H3><center>Payment Voucher <br></center></h3></div></td>
-	<td colspan="150">
-		<div><H5><right>OMB No. 1545-0029 <br></right></h5></div>
-		<H3><right>2020</right></h3></td>
-
-</table>
-
-<table>
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="941EIN">(EIN)</label>
-			<td><td><input type="text" class="form-control" id="941EIN" name="941EIN" readonly required <?php echo "value=".$EIN ?>>
-			</div></td>
-			<td colspan="5">
-			<td>
-			<label for="941Payment">Payment </label>
-			<td><td><input type="text" class="form-control" id="941Payment" name="941Payment" >
-			</div></td><br>
-</tr>
-		<td colspan="4">
-		<td>
-			<label for="941Period">Tax Period</label>
-			<td><td><input type="text" class="form-control" id="941Period" name="941Period"  readonly required <?php echo "value=".date("Y"); ?> >
-			</div></td>
-</table>
-<table>	
-	
-		<td colspan="5">
-			<td>
-			<label for="941Business">Bus Name </label>
-			<td><td><input type="text" class="form-control" id="941Business" name="941Business" disabled <?php echo 'value="' . $emplrName . '" '?>  >
-			</div></td>
-</table>
-<table>	
-	
-		<td colspan="219">
-		<td>
-			<label for="941BusinessAdd1">Bus Addr1 </label>
-			<td><td><input type="text" class="form-control" id="941BusinessAdd1" name="941BusinessAdd1" disabled <?php echo 'value="' . $employerAddress1 . '" '?> >
-			</div></td>
-</table>
-<table>		
-		<td colspan="219">
-		<td>
-			<label for="941Business2">Bus Addr2 </label>
-			<td><td><input type="text" class="form-control" id="941Business2" name="941Business2" disabled <?php echo 'value="' . $employerAddress2 . '" '?> >
-			</div></td>
-</table>
 <br><br> 
 <button style = "margin: 0 auto; display: block;" type="submit" class="btn btn-dark">Submit</button>
   </form>
