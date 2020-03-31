@@ -581,14 +581,14 @@ $TotLiabY = $row['TotLiabY'];
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944Address">Address</label>
+			<label for="944Address">Address Line 1</label>
 			<td><td><input type="text" class="form-control" id="944Address" name="944Address" disabled <?php echo 'value="' . $employerAddress1 . '" '?> >
 </tr>	
 			
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944Address">Address</label>
+			<label for="944Address">Address Line 2</label>
 			<TD><td><input type="text" class="form-control" id="944Address" name="944Address" disabled <?php echo 'value="' . $employerAddress2 . '" '?> >
 
 

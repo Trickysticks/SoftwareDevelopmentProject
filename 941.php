@@ -632,14 +632,14 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="941Address">Address</label>
+			<label for="941Address">Address Line 1</label>
 			<td><td><input type="text" class="form-control" id="941Address" name="941Address" disabled <?php echo 'value="' . $employerAddress1 . '" '?> >
 </tr>	
 			
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="941Address">Address</label>
+			<label for="941Address">Address Line 2</label>
 			<TD><td><input type="text" class="form-control" id="941Address" name="941Address" disabled <?php echo 'value="' . $employerAddress2 . '" '?> >
 
 
