@@ -107,7 +107,7 @@ if (!$link->query($sql)){
     // echo("Error description: " . $link -> error);
 }
 else{
-    header("Location: success.php");}     
+    header("Location: success.php?form941=submitted");}     
  
 
 ?>
