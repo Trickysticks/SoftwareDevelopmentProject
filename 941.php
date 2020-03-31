@@ -132,14 +132,14 @@ $ToTaxAdjb = $TotTaxAdj- $SmlBusCred;
  
  
 // 11. Balance due. If line 9 is more than line 10, enter the difference 
-//$BalDueQuery = $link->query("CASE when $YrlyDep > $ToTaxAdjb then (select $ToTaxAdjb - $YrlyDep from 944 ) else  '0' end as BalDue)  ");
+//$BalDueQuery = $link->query("CASE when $YrlyDep > $ToTaxAdjb then (select $ToTaxAdjb - $YrlyDep from 941 ) else  '0' end as BalDue)  ");
 //$row=$BalDueQuery->fetch_assoc();
 //$BalDue = $row['BalDue'];
 $BalDue = $ToTaxAdjb - $YrlyDep ;
 
 
  // 12. Overpayment. If line 10 is more than line 9 
-//$OvrPayQuery = $link->query" CASE when YrlyDep > ToTaxAdjb then (select YrlyDep - ToTaxAdjb from 944 ) else  '0' end as OvrPay)  ");
+//$OvrPayQuery = $link->query" CASE when YrlyDep > ToTaxAdjb then (select YrlyDep - ToTaxAdjb from 941 ) else  '0' end as OvrPay)  ");
 //$row=$OvrPayQuery->fetch_assoc();
 //$OvrPay = $row['OvrPay'];
 $OvrPay = 0;
@@ -592,52 +592,52 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944name">Name</label>
-			<td><td><input type="text" class="form-control" id="944name" name="944name" disabled <?php echo 'value="'.$employeeName. '" '?> >
+			<label for="941name">Name</label>
+			<td><td><input type="text" class="form-control" id="941name" name="941name" disabled <?php echo 'value="'.$employeeName. '" '?> >
 			</div></td>
 </tr>
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944title">Title</label>
-			<td><td><input type="text" class="form-control" id="944title" name="944title" readonly required <?php echo "value=".$Title ?>> 
+			<label for="941title">Title</label>
+			<td><td><input type="text" class="form-control" id="941title" name="941title" readonly required <?php echo "value=".$Title ?>> 
 			</div></td>
 </tr>
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944date">Date</label>
-			<td><td><input type="text" class="form-control" id="944date" name="944date" readonly required <?php echo "value=".date("Y/m/d"); ?> >
+			<label for="941date">Date</label>
+			<td><td><input type="text" class="form-control" id="941date" name="941date" readonly required <?php echo "value=".date("Y/m/d"); ?> >
 			</div></td>
 </tr>
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944PTIN">PTIN</label>
-			<td><td><input type="text" class="form-control" id="944PTIN" name="944PTIN" readonly required <?php echo "value=".$PTIN ?> >
-			</div></td>
-</tr>
-
-<tr>
-		<td colspan="4">
-		<td>
-			<label for="944EIN">EIN</label>
-			<td><td><input type="text" class="form-control" id="944EIN" name="944EIN" readonly required <?php echo "value=".$EIN ?>>
+			<label for="941PTIN">PTIN</label>
+			<td><td><input type="text" class="form-control" id="941PTIN" name="941PTIN" readonly required <?php echo "value=".$PTIN ?> >
 			</div></td>
 </tr>
 
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944Address">Address</label>
-			<td><td><input type="text" class="form-control" id="944Address" name="944Address" disabled <?php echo 'value="' . $employerAddress1 . '" '?> >
+			<label for="941EIN">EIN</label>
+			<td><td><input type="text" class="form-control" id="941EIN" name="941EIN" readonly required <?php echo "value=".$EIN ?>>
+			</div></td>
+</tr>
+
+<tr>
+		<td colspan="4">
+		<td>
+			<label for="941Address">Address</label>
+			<td><td><input type="text" class="form-control" id="941Address" name="941Address" disabled <?php echo 'value="' . $employerAddress1 . '" '?> >
 </tr>	
 			
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944Address">Address</label>
-			<TD><td><input type="text" class="form-control" id="944Address" name="944Address" disabled <?php echo 'value="' . $employerAddress2 . '" '?> >
+			<label for="941Address">Address</label>
+			<TD><td><input type="text" class="form-control" id="941Address" name="941Address" disabled <?php echo 'value="' . $employerAddress2 . '" '?> >
 
 
 </table>
@@ -649,7 +649,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 <br><br>
 <table>
 	<td colspan="150">
-	<div><H5><left>944-V <br></left></h5></div>
+	<div><H5><left>941-V <br></left></h5></div>
 		<H6><left>Department of the Treasury</left></h6>
 		<H6><left>Internal Revenue Service</left></h6></td>
 	<td colspan="150">
@@ -664,42 +664,42 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944EIN">(EIN)</label>
-			<td><td><input type="text" class="form-control" id="944EIN" name="944EIN" readonly required <?php echo "value=".$EIN ?>>
+			<label for="941EIN">(EIN)</label>
+			<td><td><input type="text" class="form-control" id="941EIN" name="941EIN" readonly required <?php echo "value=".$EIN ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
-			<label for="944Payment">Payment </label>
-			<td><td><input type="text" class="form-control" id="944Payment" name="944Payment" >
+			<label for="941Payment">Payment </label>
+			<td><td><input type="text" class="form-control" id="941Payment" name="941Payment" >
 			</div></td><br>
 </tr>
 		<td colspan="4">
 		<td>
-			<label for="944Period">Tax Period</label>
-			<td><td><input type="text" class="form-control" id="944Period" name="944Period"  readonly required <?php echo "value=".date("Y"); ?> >
+			<label for="941Period">Tax Period</label>
+			<td><td><input type="text" class="form-control" id="941Period" name="941Period"  readonly required <?php echo "value=".date("Y"); ?> >
 			</div></td>
 </table>
 <table>	
 	
 		<td colspan="5">
 			<td>
-			<label for="944Business">Bus Name </label>
-			<td><td><input type="text" class="form-control" id="944Business" name="944Business" disabled <?php echo 'value="' . $emplrName . '" '?>  >
+			<label for="941Business">Bus Name </label>
+			<td><td><input type="text" class="form-control" id="941Business" name="941Business" disabled <?php echo 'value="' . $emplrName . '" '?>  >
 			</div></td>
 </table>
 <table>	
 	
 		<td colspan="219">
 		<td>
-			<label for="944BusinessAdd1">Bus Addr1 </label>
-			<td><td><input type="text" class="form-control" id="944BusinessAdd1" name="944BusinessAdd1" disabled <?php echo 'value="' . $employerAddress1 . '" '?> >
+			<label for="941BusinessAdd1">Bus Addr1 </label>
+			<td><td><input type="text" class="form-control" id="941BusinessAdd1" name="941BusinessAdd1" disabled <?php echo 'value="' . $employerAddress1 . '" '?> >
 			</div></td>
 </table>
 <table>		
 		<td colspan="219">
 		<td>
-			<label for="944Business2">Bus Addr2 </label>
-			<td><td><input type="text" class="form-control" id="944Business2" name="944Business2" disabled <?php echo 'value="' . $employerAddress2 . '" '?> >
+			<label for="941Business2">Bus Addr2 </label>
+			<td><td><input type="text" class="form-control" id="941Business2" name="941Business2" disabled <?php echo 'value="' . $employerAddress2 . '" '?> >
 			</div></td>
 </table>
 <br><br> 
