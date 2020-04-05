@@ -41,8 +41,13 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="w4.php">Employee W4</a>
                   <a class="dropdown-item" href="w2.php">Employee W2</a>
-                  <a class="dropdown-item" href="941.php">941 Form</a>
-                  <a class="dropdown-item" href="944.php">944 Form</a>
+				  <?php
+					if (isset ($_SESSION['Role']) && $_SESSION['Role'] == 'Admin') {
+						echo '<a class="dropdown-item" href="941.php">941 Form</a>';
+						echo '<a class="dropdown-item" href="944.php">944 Form</a>';
+					}
+					?>
+				  
                 </div>
               </li>
               <li class="nav-item">

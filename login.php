@@ -17,6 +17,7 @@ require_once "config.php";
 // Define variables and initialize with empty values
 $username = $password = "";
 $username_err = $password_err = "";
+
  
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -52,6 +53,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 // Store result
                 mysqli_stmt_store_result($stmt);
                 
+                
                 // Check if username exists, if yes then verify password
                 if(mysqli_stmt_num_rows($stmt) == 1){                    
                     // Bind result variables
@@ -64,7 +66,19 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             // Store data in session variables
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
-                            $_SESSION["username"] = $username;                            
+                            $_SESSION["username"] = $username; 
+
+							//make a query that will grab the role of the account
+							$query1="SELECT Role FROM employee WHERE EMPID=".$id."";
+							//Execute query
+							$result = $link->query($query1) or die('Could not run query: '.$link->error);
+
+							if ($result->num_rows > 0) {
+								while($row = $result->fetch_assoc()) {
+									$Role=$row["Role"];
+								}
+								$_SESSION["Role"]= $Role;
+							}							
                             
                             // Redirect user to welcome page
                             header("location: index.php");
