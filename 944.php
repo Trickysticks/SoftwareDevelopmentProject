@@ -1,5 +1,9 @@
 <?php 
 //Author: Christine Wasserman
+
+if (isset($_SESSION['Role'])==false && $_SESSION['Role'] != 'Admin')
+	header("Location: index.php");
+	
 include("navbar.php");
 include("config.php");
 

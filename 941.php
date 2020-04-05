@@ -1,9 +1,12 @@
 <?php
 //Author: Timothy Dees
+if (isset($_SESSION['Role'])==false && $_SESSION['Role'] != 'Admin')
+	header("Location: index.php");
+
 include("navbar.php");
 include("config.php"); 
  
- $currentId = $_SESSION["id"];
+$currentId = $_SESSION["id"];
 
 $deptId = $middleInitial = $streetName = $aptNum = $city = $state = $zip = $streetNum =$firstName= $lastName = $SSN = $salary=  "";
 //puling all info from employee table
