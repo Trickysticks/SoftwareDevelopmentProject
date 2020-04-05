@@ -25,13 +25,12 @@
 
               <div class="row">
               <div class="col text-center" id="col1" >
-				  <a href="w4.php">
-                  <button type="button" class="btn-lg btn-dark">Employee W4</button>
-				  </a>
+				          <a href="w4.php">
+                    <button type="button" class="btn-lg btn-dark">Employee W4</button>
+				          </a>
                   <a href="w2.php">
-                  <button type="button" class="btn-lg btn-dark">Employee W2</button>
-                  </a>
-				  
+                    <button type="button" class="btn-lg btn-dark">Employee W2</button>
+                  </a>  
 				  <a href="941.php">
 				  <?php
 					if (isset ($_SESSION['Role']) && $_SESSION['Role'] == 'Admin') {
@@ -50,6 +49,8 @@
 				  
                </div>              
               </div>
+          </div>              
+          </div>
         </div>
       </div>
      </body>
