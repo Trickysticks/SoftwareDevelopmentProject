@@ -166,7 +166,7 @@ $dec = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payrol
 //Total liability for year. Add lines 13a through 13l. Total must equal line 9 
 $TotLiabYQuery = $link->query("Select sum(MDCTax+SSTax+FEDTax+STATETax) as sumTotLiabY from payroll group by empid ");
 $row=$TotLiabYQuery->fetch_assoc();
-$TotLiabY = $row['TotLiabY'];
+$TotLiabY = $row['sumTotLiabY'];
 
 
 ?>
