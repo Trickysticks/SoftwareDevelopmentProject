@@ -583,7 +583,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 			<td colspan="75">
 		<td>
 			<label for="941PIN">5 digit PIN</label>
-			<td><td><input type="text" class="form-control" id="941PIN" name="941PIN" >
+			<td><td><input type="text" class="form-control" id="941PIN" name="941PIN" minlength=5>
 			</div></td>
 </table>
 <table>
