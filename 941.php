@@ -564,7 +564,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 			<td colspan="14">
 		<td>
 			<label for="DateWage">Enter the final date you paid wages </label>
-			<td><td><input type="text" class="form-control" id="DateWage" name="DateWage" >
+			<td><td><input type="date" class="form-control" id="DateWage" name="DateWage" >
 			</div></td>
 </table>
 <table>

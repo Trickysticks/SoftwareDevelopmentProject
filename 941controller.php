@@ -65,23 +65,6 @@ $row=$EMPIDQuery->fetch_assoc();
 $EMPID = $row['EMPID'];
    
 
-echo "EIN:".$EIN."\n";
-echo "<br>";
-echo "NumEmployees:".$NumEmployees."\n";
-echo "<br>";
-echo "Compensation:".$Compensation."\n";
-echo "<br>";
-echo "FedWithold:".$FedWithold."\n";
-echo "<br>";
-echo "SSWagesTax:".$SSWagesTax."\n";
-echo "<br>";
-echo "MDCWagesTax:".$MDCWagesTax."\n";
-echo "<br>";
-echo "EMPID:".$EMPID."\n";
-echo "<br>";
-echo "DateEnd:".$DateEnd."\n";
-echo "<br>";
-
 $checkFor941 = $link->query("SELECT * FROM form941 WHERE EIN=$EIN");
 
 if (!$DateEnd){ // dateEnd is null
@@ -95,12 +78,12 @@ if (!$DateEnd){ // dateEnd is null
 else{
     if (!$checkFor941 || mysqli_num_rows($checkFor941)==0) { //exluded PrevAppliedOvrPy, BalDue; not sure how to calculate these; see above
         $sql = "INSERT INTO form941 (EIN ,NumEmployees ,Compensation ,FedTax ,SSTax ,MedicareTax, EMPID, CompEndDate) 
-            VALUES ($EIN ,$NumEmployees ,$Compensation ,$FedWithold ,$SSWagesTax ,$MDCWagesTax, $EMPID, $DateEnd)";
+            VALUES ($EIN ,$NumEmployees ,$Compensation ,$FedWithold ,$SSWagesTax ,$MDCWagesTax, $EMPID, '$DateEnd')";
     }
         else{
         $link->query("DELETE FROM form941 WHERE EIN=$EIN");
         $sql = "INSERT INTO form941 (EIN ,NumEmployees ,Compensation ,FedTax ,SSTax ,MedicareTax, EMPID, CompEndDate) 
-            VALUES ($EIN ,$NumEmployees ,$Compensation ,$FedWithold ,$SSWagesTax ,$MDCWagesTax, '$EMPID', $DateEnd)";}
+            VALUES ($EIN ,$NumEmployees ,$Compensation ,$FedWithold ,$SSWagesTax ,$MDCWagesTax, '$EMPID', '$DateEnd')";}
 }	
 if (!$link->query($sql)){
     header("Location: error.php");	

@@ -539,7 +539,7 @@ $TotLiabY = $row['sumTotLiabY'];
 <table>
 		<td colspan="4">
 			<label for="DateEnd">If your business has closed or you stopped paying wages. Enter the final date you paid wages (YYYY/MM/DD) </label>
-			<td><td><input type="text" class="form-control" id="DateEnd" name="DateEnd" >
+			<td><td><input type="date" class="form-control" id="DateEnd" name="DateEnd" >
 			</div></td>
 </table>
 <br><br>
