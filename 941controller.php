@@ -9,34 +9,42 @@ $EIN = $NumEmployees = $Compensation = $FedWithold = $SSWagesTax = $MDCWagesTax 
 
 if (isset($_GET['TotalCompensation'])){
     $Compensation = $_GET['TotalCompensation'];
+    $Compensation = floatval(preg_replace('/[^\d.]/', '', $Compensation));
 }
 
 if (isset($_GET['TotalFedWithhold'])){
     $FedWithold = $_GET['TotalFedWithhold'];
+    $FedWithold = floatval(preg_replace('/[^\d.]/', '', $FedWithold));
 }
 
 if (isset($_POST['TotalSSWages'])){
     $SSWages = $_POST['TotalSSWages'];
+    $SSWages = floatval(preg_replace('/[^\d.]/', '', $SSWages));
 }
 
 if (isset($_POST['SSWagesTax'])){
     $SSWagesTax = $_POST['SSWagesTax'];
+    $SSWagesTax = floatval(preg_replace('/[^\d.]/', '', $SSWagesTax));
 }
 
 if (isset($_POST['TotalSSTips'])){
     $SSTips = $_POST['TotalSSTips'];
+    $SSTips = floatval(preg_replace('/[^\d.]/', '', $SSTips));
 }
 
 if (isset($_POST['SSTipsTax'])){
     $SSTipsTax = $_POST['SSTipsTax'];
+    $SSTipsTax = floatval(preg_replace('/[^\d.]/', '', $SSTipsTax));
 }
 
 if (isset($_POST['TotalMDCWages'])){
     $MDCWages = $_POST['TotalMDCWages'];
+    $MDCWages = floatval(preg_replace('/[^\d.]/', '', $MDCWages));
 }
 
 if (isset($_POST['MDCWagesTax'])){
     $MDCWagesTax = $_POST['MDCWagesTax'];
+    $MDCWagesTax = floatval(preg_replace('/[^\d.]/', '', $MDCWagesTax));
 }
 
 //Totaling the number of all active employees 

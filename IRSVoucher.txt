@@ -1,9 +1,9 @@
 ---------------------------------------------------------------------------
 Form:941                              Year: 2020
 ---------------------------------------------------------------------------
-EIN: 135564938                                       SS Tax: $42.41
-Company: Highland Capital                            Fed Tax: $432.00
-Address: 297 Fulton St 5513, New York, NY 10007      Medicare Tax: $15.43
+EIN: 135564938                                       SS Tax: $305.91
+Company: Highland Capital                            Fed Tax: $5246.00
+Address: 297 Fulton St 5513, New York, NY 10007      Medicare Tax: $18.79
 
-Total amount paid by employer: $979.68
+Total amount paid by employer: $11141.4
 ---------------------------------------------------------------------------

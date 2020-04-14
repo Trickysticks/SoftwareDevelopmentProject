@@ -9,34 +9,42 @@ $EIN = $NumEmployees = $Compensation = $FedWithold = $SSWagesTax = $MDCWagesTax 
 
 if (isset($_GET['TotalCompensation'])){
     $Compensation = $_GET['TotalCompensation'];
+    $Compensation = floatval(preg_replace('/[^\d.]/', '', $Compensation));
 }
 
 if (isset($_GET['TotalFedWithhold'])){
     $FedWithold = $_GET['TotalFedWithhold'];
+    $FedWithold = floatval(preg_replace('/[^\d.]/', '', $FedWithold));
 }
 
 if (isset($_POST['TotalSSWages'])){
     $SSWages = $_POST['TotalSSWages'];
+    $SSWages = floatval(preg_replace('/[^\d.]/', '', $SSWages));
 }
 
 if (isset($_POST['SSWagesTax'])){
     $SSWagesTax = $_POST['SSWagesTax'];
+    $SSWagesTax = floatval(preg_replace('/[^\d.]/', '', $SSWagesTax));
 }
 
 if (isset($_POST['TotalSSTips'])){
     $SSTips = $_POST['TotalSSTips'];
+    $SSTips = floatval(preg_replace('/[^\d.]/', '', $SSTips));
 }
 
 if (isset($_POST['SSTipsTax'])){
     $SSTipsTax = $_POST['SSTipsTax'];
+    $SSTipsTax = floatval(preg_replace('/[^\d.]/', '', $SSTipsTax));
 }
 
 if (isset($_POST['TotalMDCWages'])){
     $MDCWages = $_POST['TotalMDCWages'];
+    $MDCWages = floatval(preg_replace('/[^\d.]/', '', $MDCWages));
 }
 
 if (isset($_POST['MDCWagesTax'])){
     $MDCWagesTax = $_POST['MDCWagesTax'];
+    $MDCWagesTax = floatval(preg_replace('/[^\d.]/', '', $MDCWagesTax));
 }
 
 //Totaling the number of all active employees 
@@ -87,7 +95,10 @@ $checkFor944 = $link->query("SELECT * FROM form944 WHERE EIN=$EIN");
 if (!$DateEnd){ // dateEnd is null
 
     if (!$checkFor944 || mysqli_num_rows($checkFor944)==0) { //exluded PrevAppliedOvrPy, BalDue; not sure how to calculate these; see above
-        $sql = "INSERT INTO form944 (EIN ,NumEmployees ,Compensation ,FedTax ,SSTax ,MedicareTax, EMPID) VALUES ($EIN ,$NumEmployees ,$Compensation ,$FedWithold ,$SSWagesTax ,$MDCWagesTax, '$EMPID')";}
+        echo "hi3";
+        $sql = "INSERT INTO form944 (EIN ,NumEmployees ,Compensation ,FedTax ,SSTax ,MedicareTax, EMPID) VALUES ($EIN ,$NumEmployees ,$Compensation ,$FedWithold ,$SSWagesTax ,$MDCWagesTax, '$EMPID')";
+        echo "</br>" . $sql;
+    }
     else{
         $link->query("DELETE FROM form944 WHERE EIN=$EIN");
         $sql = "INSERT INTO form944 (EIN ,NumEmployees ,Compensation ,FedTax ,SSTax ,MedicareTax, EMPID) 
@@ -105,10 +116,10 @@ else{
 }	
 if (!$link->query($sql)){
     header("Location: error.php");	
-    // echo("Error description: " . $link -> error);
+    echo("Error description: " . $link -> error);
 }
 else{
-    header("Location: success.php?form944=submitted");}     
- 
+    header("Location: success.php?form944=submitted");   
+}
 
 ?>
