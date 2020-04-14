@@ -149,6 +149,7 @@ $OvrPay = 0;
 //$row = mysqli_fetch_array($DepositSchedule);
 //$sum = $row[dep_Sched]; 
 //below is a test to see how it populates.
+/*
 $jan = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'jan'");
 $feb = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'feb'");
 $march = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'march'");
@@ -161,6 +162,9 @@ $sept = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payro
 $oct = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'oct'");
 $nov = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'nov'");
 $dec = mysqli_query($link, "Select sum(MDCTax+SSTax+FEDTax+STATETax) from payroll where month = 'dec'");
+*/
+
+$jan = $feb = $march = $april = $may = $june = $july = $aug = $sept = $oct = $nov = $dec = $ToTaxAdjb/12;
 
 
 //Total liability for year. Add lines 13a through 13l. Total must equal line 9 
@@ -253,7 +257,7 @@ $TotLiabY = $row['sumTotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="944Comp">1. Wages, tips, and other compensation </label>
-			<td><td><input type="text" class="form-control" id="944Comp" name="944Comp" readonly required <?php echo "value=".$Compensation ?>>
+			<td><td><input type="text" class="form-control" id="944Comp" name="944Comp" readonly required <?php echo "value=".number_format($Compensation, 2) ?>>
 			</div></td>
 		</tr>
 
@@ -262,7 +266,7 @@ $TotLiabY = $row['sumTotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="944FedTax">2. Federal income tax withheld from wages, tips, and other compensation </label>
-			<td><td><input type="text" class="form-control" id="944FedTax" name="944FedTax" readonly required <?php echo "value=".$FedWithold ?>>
+			<td><td><input type="text" class="form-control" id="944FedTax" name="944FedTax" readonly required <?php echo "value=".number_format($FedWithold, 2) ?>>
 			</div></td>
 		</tr>
 		
@@ -283,7 +287,7 @@ $TotLiabY = $row['sumTotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="SSWages">4a. Taxable social security wages</label>
-			<td><td><input type="text" class="form-control" id="SSWages" name="SSWages" readonly required <?php echo "value=".$SSWages ?>>
+			<td><td><input type="text" class="form-control" id="SSWages" name="SSWages" readonly required <?php echo "value=".number_format($SSWages, 2) ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
@@ -296,7 +300,7 @@ $TotLiabY = $row['sumTotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="SSTip">4b. Taxable social security tips</label>
-			<td><td><input type="text" class="form-control" id="SSTip" name="SSTip" readonly required <?php echo "value=".$SSTips ?>>
+			<td><td><input type="text" class="form-control" id="SSTip" name="SSTip" readonly required <?php echo "value=".number_format($SSTips, 2) ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
@@ -309,7 +313,7 @@ $TotLiabY = $row['sumTotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="MDCWages">4c. Taxable Medicare wages & tips</label>
-			<td><td><input type="text" class="form-control" id="MDCWages" name="MDCWages" readonly required <?php echo "value=".$MDCWages ?>>
+			<td><td><input type="text" class="form-control" id="MDCWages" name="MDCWages" readonly required <?php echo "value=".number_format($MDCWages, 2) ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
@@ -443,22 +447,22 @@ $TotLiabY = $row['sumTotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="Jan">13a. Jan.</label>
-			<td><td><input type="text" class="form-control" id="Jan" name="Jan" readonly required <?php echo "value=".$jan ?>>
+			<td><td><input type="text" class="form-control" id="Jan" name="Jan" readonly required <?php echo "value=".number_format($jan, 3) ?>>
 			</div></td>
 		<td colspan="4">
 		<td>
 			<label for="Apr">13d. Apr.</label>
-			<td><td><input type="text" class="form-control" id="Apr" name="Apr" readonly required <?php echo "value=".$april ?>>
+			<td><td><input type="text" class="form-control" id="Apr" name="Apr" readonly required <?php echo "value=".number_format($april, 3) ?>>
 			</div></td>
 		<td colspan="4">
 		<td>
 			<label for="July">13g. July.</label>
-			<td><td><input type="text" class="form-control" id="July" name="July" readonly required <?php echo "value=".$july ?>>
+			<td><td><input type="text" class="form-control" id="July" name="July" readonly required <?php echo "value=".number_format($july, 3) ?>>
 			</div></td>
 			<td colspan="4">
 		<td>
 			<label for="Oct">13j. Oct.</label>
-			<td><td><input type="text" class="form-control" id="Oct" name="Oct" readonly required <?php echo "value=".$oct ?>>
+			<td><td><input type="text" class="form-control" id="Oct" name="Oct" readonly required <?php echo "value=".number_format($oct, 3) ?>>
 			</div></td>
 	</tr>
 		
@@ -468,22 +472,22 @@ $TotLiabY = $row['sumTotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="Feb">13b. Feb.</label>
-			<td><td><input type="text" class="form-control" id="Feb" name="Feb" readonly required <?php echo "value=".$feb ?>>
+			<td><td><input type="text" class="form-control" id="Feb" name="Feb" readonly required <?php echo "value=".number_format($feb, 3) ?>>
 			</div></td>
 		<td colspan="4">
 		<td>
 			<label for="May">13e. May.</label>
-			<td><td><input type="text" class="form-control" id="May" name="May" readonly required <?php echo "value=".$may ?>>
+			<td><td><input type="text" class="form-control" id="May" name="May" readonly required <?php echo "value=".number_format($may, 3) ?>>
 			</div></td>
 		<td colspan="4">
 		<td>
 			<label for="Aug">13h. Aug.</label>
-			<td><td><input type="text" class="form-control" id="Aug" name="Aug" readonly required <?php echo "value=".$aug ?>>
+			<td><td><input type="text" class="form-control" id="Aug" name="Aug" readonly required <?php echo "value=".number_format($aug, 3) ?>>
 			</div></td>
 			<td colspan="4">
 		<td>
 			<label for="Nov">13k. Nov.</label>
-			<td><td><input type="text" class="form-control" id="Nov" name="Nov" readonly required <?php echo "value=".$nov ?>>
+			<td><td><input type="text" class="form-control" id="Nov" name="Nov" readonly required <?php echo "value=".number_format($nov, 3) ?>>
 			</div></td>
 	</tr>
 		
@@ -493,22 +497,22 @@ $TotLiabY = $row['sumTotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="Mar">13c. Mar.</label>
-			<td><td><input type="text" class="form-control" id="Mar" name="Mar" readonly required <?php echo "value=".$march ?>>
+			<td><td><input type="text" class="form-control" id="Mar" name="Mar" readonly required <?php echo "value=".number_format($march, 2) ?>>
 			</div></td>
 		<td colspan="4">
 		<td>
 			<label for="June">13f. June.</label>
-			<td><td><input type="text" class="form-control" id="June" name="June" readonly required <?php echo "value=".$june ?> >
+			<td><td><input type="text" class="form-control" id="June" name="June" readonly required <?php echo "value=".number_format($june, 2) ?> >
 			</div></td>
 		<td colspan="4">
 		<td>
 			<label for="Sept">13i. Sep.</label>
-			<td><td><input type="text" class="form-control" id="Sept" name="Sept" readonly required <?php echo "value=".$sept ?>>
+			<td><td><input type="text" class="form-control" id="Sept" name="Sept" readonly required <?php echo "value=".number_format($sept, 2) ?>>
 			</div></td>
 			<td colspan="4">
 		<td>
 			<label for="Dec">13l. Dec.</label>
-			<td><td><input type="text" class="form-control" id="Dec" name="Dec" readonly required <?php echo "value=".$dec ?>>
+			<td><td><input type="text" class="form-control" id="Dec" name="Dec" readonly required <?php echo "value=".number_format($dec, 2) ?>>
 			</div></td>
 	</tr>
 		
@@ -518,7 +522,7 @@ $TotLiabY = $row['sumTotLiabY'];
 		<td colspan="4">
 		<td>
 			<label for="TotLiabY">Total liability for year. Add lines 13a through 13l. Total must equal line 9</label>
-			<td><td><input type="text" class="form-control" id="TotLiabY" name="TotLiabY" readonly required <?php echo "value=".$TotLiabY ?>>
+			<td><td><input type="text" class="form-control" id="TotLiabY" name="TotLiabY" readonly required <?php echo "value=".number_format($ToTaxAdjb, 2) ?>>
 			</div></td>
 </tr>
 <br><br>

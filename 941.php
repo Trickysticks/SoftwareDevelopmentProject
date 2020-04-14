@@ -335,7 +335,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 		<td colspan="4">
 		<td>
 			<label for="941FedTax">3. Federal income tax withheld from wages, tips, and other compensation </label>
-			<td><td><input type="text" class="form-control" id="941FedTax" name="941FedTax" readonly required <?php echo "value=".$FedWithold ?>>
+			<td><td><input type="text" class="form-control" id="941FedTax" name="941FedTax" readonly required <?php echo "value=".number_format($FedWithold, 2) ?>>
 			</div></td>
 		</tr>
 		
