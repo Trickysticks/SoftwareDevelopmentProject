@@ -271,8 +271,8 @@ $TotLiabY = $row['sumTotLiabY'];
 <tr>
 		<td colspan="4">
 		<td>
-			<label for="944NoComp">3. If no wages, tips, and other compensation are subject to social security or Medicare tax </label>
-			<td><td><input type="text" class="form-control" id="944NoComp" name="944NoComp" readonly required <?php echo "value=".$NoComp ?>>
+			<label for="944NoComp">4. If no wages, tips, and other compensation are subject to social security or Medicare tax, check & go to line 5 </label>
+			<td><td><input type="checkbox" class="form-control" id="944NoComp" name="944NoComp" disabled ="disabled" >
 			</div></td>
 		</tr>
 		

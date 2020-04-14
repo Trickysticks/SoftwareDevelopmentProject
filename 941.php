@@ -24,6 +24,11 @@ if (isset($row['Empid']))
   if (isset($row['PTIN']))
     $PTIN = $row['PTIN'];
 }
+
+$numEmployeesQuery = $link->query("Select EIN ,Count(*) NumEmployees from W2 group by EIN"); //add where termination date <= todays date 
+$row=$numEmployeesQuery->fetch_assoc();
+$NumEmployees = $row['NumEmployees'];
+
 //combining employee name ; first and last
 $employeeName = $firstName . " " . $lastName;
 
@@ -57,6 +62,7 @@ $employerAddress2 =$emplrCity . ", " . $emplrState . " " . $emplrZip;
 $CompensationQuery = $link->query("Select Sum(Compensation+SSWages+MDCWages+SSTips) as TotalCompensation from w2");
 $row=$CompensationQuery->fetch_assoc();
 $Compensation = $row['TotalCompensation'];
+$Compensation = $Compensation/4;
 
 //getting total federal witholdings of all W2s
 $FedWitholdQuery = $link->query("Select Sum(FedWithold) as TotalFedWithhold from w2");
@@ -69,7 +75,7 @@ $NoComp = 0; //place holder not sure what this is
 //getting total Social Security Wages of all W2s
 $SSWagesQuery = $link->query("Select Sum(SSWages) as TotalSSWages from w2");
 $row=$SSWagesQuery->fetch_assoc();
-$SSWages = $row['TotalSSWages'];
+$SSWages = $row['TotalSSWages']/4;
 
 //Calculating the total Social Security Tax from the Total Social Security Wages for all W2s
 $SSWagesTaxRaw = $SSWages * .124;
@@ -78,7 +84,7 @@ $SSWagesTax = number_format($SSWagesTaxRaw, 2);
 //getting total Social Security Tips of all W2s
 $SSTipsQuery = $link->query("Select Sum(SSTips) as TotalSSTips from w2");
 $row=$SSTipsQuery->fetch_assoc();
-$SSTips = $row['TotalSSTips'];
+$SSTips = $row['TotalSSTips']/4;
 
 //Calculating the total Social Security Tips from the Total Social Security Wages for all W2s
 $SSTipsTaxRaw = $SSTips * .124;
@@ -87,7 +93,7 @@ $SSTipsTax = number_format($SSTipsTaxRaw,2);
 //getting total Medicare Wages of all W2s
 $MDCWagesQuery = $link->query("Select Sum(MDCWages) as TotalMDCWages from w2");
 $row=$MDCWagesQuery->fetch_assoc();
-$MDCWages = $row['TotalMDCWages'];
+$MDCWages = $row['TotalMDCWages']/4;
 
 //Calculating the total Medicare Wages from the Total Social Security Wages for all W2s
 $MDCWagesTaxRaw = $MDCWages * .029;
@@ -202,6 +208,27 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
     <title>Highland Capital Tax System</title>
   </head>
   <body>
+  
+ <script>
+	var docElements = ["941NumEmp", "941Comp", "941FedTax", "941NoComp", "SSWages", "SSWagesTax",
+					   "SSTip", "SSTipsTax", "MDCWages", "MDCWagesTax", "MDCTip", "MDCTipTax", "TotalTax",
+					   "941DemTax", "TotalTaxBeforeAdj", "941QAdj", "941QSick", "941QIns", "941ToTaxAdja",
+					   "941SmlBus", "941ToTaxAdjb", "941DepQ", "941Bal", "941OvrPay",
+					   "Mth1", "Mth2", "Mth3", "TotalLiab"];
+	
+	 $( document ).ready(function() {
+		docElements.forEach(function(entry) {
+			document.getElementById(entry).style.visibility = "hidden";
+		});
+       
+    });
+ 
+	function UpdateQuarterCalcs() {
+		docElements.forEach(function(entry) {
+			document.getElementById(entry).style.visibility = "visible";
+		});
+	}
+</script>
 	
 <div><H1><center>941 Form </center></h1></div></br>
   <form method="POST" <?php echo  "action='941controller.php?TotalCompensation=$Compensation&TotalFedWithhold=$FedWithold'" ?>>
@@ -225,7 +252,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 			<td><td><input type="text" class="form-control" id="941Name" name="941Name" disabled <?php echo 'value="' . $emplrName . '" '?> >
 			</div></td>
 		<td colspan="125">
-		<td><div><td><input type="radio" id="1.January, Feb, March" name="period_select" value= "1.January,Feb,March">
+		<td><div><td><input type="radio" id="1.January, Feb, March" name="period_select" onclick="UpdateQuarterCalcs()" value= "1.January,Feb,March">
 			<label for="1.January,Feb,March">1. January, Feb, March</label></td>
 		</tr>	
 		<tr>
@@ -236,7 +263,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 			</div></td>
 		<td colspan="125">
 		<td>
-			<td><div><input type="radio" id="2.April, May, June" name="period_select" value= "2.April, May, June">
+			<td><div><input type="radio" id="2.April, May, June" name="period_select" onclick="UpdateQuarterCalcs()" value= "2.April, May, June">
 			<label for="2. April, May, June">2. April, May, June</label></td>
 		</tr>	
 		<tr>
@@ -246,7 +273,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 			<TD><td><input type="text" class="form-control" id="941Street" name="941Street" readonly required <?php echo "value=".$emplrStAdd ?>>
 			</div></td>
 		<td colspan="125">
-			<td><div><td><input type="radio" id="3.July, August, September" name="period_select" value= "3.July,August,September">
+			<td><div><td><input type="radio" id="3.July, August, September" name="period_select" onclick="UpdateQuarterCalcs()" value= "3.July,August,September">
 			<label for="3. July,August,September">3. July, August, September</label></td>
 		</tr>	
 		<tr>
@@ -256,7 +283,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 			<td><td><input type="text" class="form-control" id="941Suite" name="941Suite" readonly required <?php echo "value=".$emplrSuiteNum ?>>
 			</div></td>
 			<td colspan="125">
-			<td><div><td><input type="radio" id="4.October, November, December" name="period_select" value= "4.October, November, December">
+			<td><div><td><input type="radio" id="4.October, November, December" name="period_select" onclick="UpdateQuarterCalcs()" value= "4.October, November, December">
 			<label for="4.October, November, December">4. October, November, December</label></td>
 		</tr>
 		</tr>
@@ -291,7 +318,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 		<td>
 			<label for="941NumEmp">1. Number of employees who received wages, tips, or other compensation for the pay period including:
 			Mar. 12 (Quarter 1), June 12 (Quarter 2), Sept. 12 (Quarter 3), or Dec. 12 (Quarter 4)</label>
-			<td><td> <input type="text" class="form-control" id="941NumEmp" name="941NumEmp" >
+			<td><td> <input type="text" class="form-control" id="941NumEmp" name="941NumEmp" readonly required <?php echo "value=".$NumEmployees ?>>
 			</div></td>
 		</tr>
 		
@@ -299,7 +326,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 		<td colspan="4">
 		<td>
 			<label for="941Comp">2. Wages, tips, and other compensation </label>
-			<td><td><input type="text" class="form-control" id="941Comp" name="941Comp" readonly required <?php echo "value=".$Compensation ?>>
+			<td><td><input type="text" class="form-control" id="941Comp" name="941Comp" readonly required <?php echo "value=".number_format($Compensation, 2) ?>>
 			</div></td>
 		</tr>
 
@@ -329,7 +356,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 		<td colspan="4">
 		<td>
 			<label for="SSWages">5a. Taxable social security wages</label>
-			<td><td><input type="text" class="form-control" id="SSWages" name="SSWages" readonly required <?php echo "value=".$SSWages ?>>
+			<td><td><input type="text" class="form-control" id="SSWages" name="SSWages" readonly required <?php echo "value=".number_format($SSWages, 2) ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
@@ -342,7 +369,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 		<td colspan="4">
 		<td>
 			<label for="SSTip">5b. Taxable social security tips</label>
-			<td><td><input type="text" class="form-control" id="SSTip" name="SSTip" readonly required <?php echo "value=".$SSTips ?>>
+			<td><td><input type="text" class="form-control" id="SSTip" name="SSTip" readonly required <?php echo "value=".number_format($SSTips, 2) ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
@@ -355,7 +382,7 @@ $TotalLiability = $Month1PaymentRaw + $Month2PaymentRaw + $Month3PaymentRaw;
 		<td colspan="4">
 		<td>
 			<label for="MDCWages">5c. Taxable Medicare wages & tips</label>
-			<td><td><input type="text" class="form-control" id="MDCWages" name="MDCWages" readonly required <?php echo "value=".$MDCWages ?>>
+			<td><td><input type="text" class="form-control" id="MDCWages" name="MDCWages" readonly required <?php echo "value=".number_format($MDCWages, 2) ?>>
 			</div></td>
 			<td colspan="5">
 			<td>
