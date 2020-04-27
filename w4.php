@@ -119,13 +119,13 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
           <label for="w4Options">c.</label>&nbsp;
                 <div class="btn-group btn-group-toggle" data-toggle="buttons" id="w4Options">
                         <label class="btn btn-secondary active">
-                          <input type="radio" name="options" id="w4singleOrSeparate" name="w4singleOrSeparate" value="Single" autocomplete="off" checked> Single or Married filing separately
+                          <input type="radio" name="options" id="w4singleOrSeparate" name="w4singleOrSeparate" value="Single" autocomplete="off" checked required > Single or Married filing separately
                         </label>
                         <label class="btn btn-secondary">
-                          <input type="radio" name="options" id="w4married" name="w4married" value="Married filed jointly" autocomplete="off">Married filed jointly
+                          <input type="radio" name="options" id="w4married" name="w4married" value="Married filed jointly" autocomplete="off" required >Married filed jointly
                         </label>
                         <label class="btn btn-secondary">
-                          <input type="radio" name="options" id="w4headofhouse" name="w4headofhouse" value="Head of Household"  autocomplete="off"> Head of household
+                          <input type="radio" name="options" id="w4headofhouse" name="w4headofhouse" value="Head of Household"  autocomplete="off" required> Head of household
                         </label>
                       </div>
                
@@ -143,9 +143,9 @@ while ($row = $employeeAddressInfo->fetch_assoc()){
 		  <p>(b) Use the Multiple Jobs Worksheet on page 3 and enter the result in Step 4(c) below for roughly accurate witholding OR</p>
 		  <p>(c) If there are only two jobs total, you make check this box. Do the same on form W-4 for the other job. This option is accurate for jobs with similar pay; otherwise, more tax than neccessary may be withheld </p>
           <label for="yes">Yes I have multiple jobs or I am married filing jointly</label>
-		  <input type="radio" id="twoJobs" name="twoJobs" value="Yes">
+		  <input type="radio" id="twoJobs" name="twoJobs" value="Yes" required>
 		  <label for="no">No I don't have multiple jobs or I am not married filing jointly</label>
-		  <input type="radio" id="twoJobs" name="twoJobs" value="No">
+		  <input type="radio" id="twoJobs" name="twoJobs" value="No" required>
         </div>
 
   
